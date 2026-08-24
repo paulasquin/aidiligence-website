@@ -83,6 +83,12 @@ FOCUS_AREAS = [
      "technical standpoint."),
 ]
 
+OFFERINGS = [
+    "AI &amp; MLOps engineering",
+    "AI stack due diligence audit",
+    "AI team &amp; project management",
+]
+
 CAPABILITIES = [
     "Cloud or self-hosting running costs",
     "Model inference responsiveness",
@@ -178,6 +184,7 @@ def cards(items):
 
 def body_home(p):
     caps = "\n".join(f"        <li>{html.escape(c)}</li>" for c in CAPABILITIES)
+    offer = "\n".join(f"        <li>{o}</li>" for o in OFFERINGS)
     bio = "\n".join(f"      <p>{html.escape(b)}</p>" for b in FOUNDER_BIO)
     return f"""  <section class="hero">
     <div class="wrap">
@@ -185,6 +192,9 @@ def body_home(p):
       <h1>Artificial Intelligence Due Diligence</h1>
       <p class="lede">A comprehensive evaluation of a company's AI stack — what the technology
         actually does, what it costs to run, and how well it holds up under scrutiny.</p>
+      <ul class="offer">
+{offer}
+      </ul>
       <div class="actions">
         {link_button("Get in touch on LinkedIn")}
       </div>

@@ -114,6 +114,25 @@ a:hover { color: var(--accent-dk); }
   letter-spacing: .01em;
 }
 
+/* ---------- Service lines (hero) ---------- */
+
+.offer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  list-style: none;
+  padding: 0;
+  margin: 24px 0 0;
+}
+.offer li {
+  padding: 7px 15px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: .92rem;
+  font-weight: 600;
+  color: var(--slate);
+}
+
 /* ---------- Sections ---------- */
 
 .section { padding: 52px 0; border-top: 1px solid var(--border); }
