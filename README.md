@@ -2,7 +2,8 @@
 
 Static site for AI Diligence.
 
-Plain HTML and CSS, no dependencies.
+Plain HTML and CSS. No framework, no external request at runtime — the two
+webfonts are served from this repository.
 
 ## Build
 
@@ -23,3 +24,8 @@ Then <http://localhost:8767>.
 ## Deployment
 
 GitHub Pages, `main` branch, repository root. The domain is declared by the `CNAME` file.
+
+## Assets
+
+`assets/img/canyon.jpg` comes from [pxhere](https://pxhere.com) and is released
+under CC0.
