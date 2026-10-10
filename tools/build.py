@@ -20,6 +20,18 @@ SITE = "AI Diligence"
 TAGLINE = "Artificial Intelligence Due Diligence"
 LINKEDIN = "https://www.linkedin.com/in/paulasquin"
 
+# Publisher of the site (mentions légales, LCEN art. 6).
+PUBLISHER = {
+    "name": "Guardia",
+    "form": "société par actions simplifiée (SAS) au capital de 1\u00a0000\u00a0€",
+    "rcs": "RCS Nanterre 910 991 140",
+    "vat": "FR81910991140",
+    "address": "6 rue des Romains, 92270 Bois-Colombes, France",
+    "director": "Paul Asquin, Président",
+    "email": "contact.aidiligence@gmail.com",
+    "phone": "+33 7 67 86 10 73",
+}
+
 LINKEDIN_SVG = (
     '<svg viewBox="0 0 448 512" aria-hidden="true"><path d="M100.28 448H7.4V148.9h92.88zM53.79 '
     '108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 '
@@ -181,7 +193,8 @@ def page(slug, title, body_fn, description, prefix=None):
 <footer class="site-footer">
   <div class="wrap">
     <p>&copy; {html.escape(SITE)} — {html.escape(TAGLINE)} ·
-      <a href="{LINKEDIN}" target="_blank" rel="noopener noreferrer">LinkedIn</a></p>
+      <a href="{LINKEDIN}" target="_blank" rel="noopener noreferrer">LinkedIn</a> ·
+      <a href="{p}legal/">Mentions légales</a></p>
   </div>
 </footer>
 
@@ -285,6 +298,41 @@ def body_home(p):
 """
 
 
+def body_legal(p):
+    g = {k: html.escape(v) for k, v in PUBLISHER.items()}
+    return f"""  <section class="section legal">
+    <div class="wrap">
+      <h1 class="section-title">Mentions légales</h1>
+
+      <h2>Éditeur</h2>
+      <p>Le site aidiligence.eu est édité par <strong>{g["name"]}</strong>, {g["form"]},
+        immatriculée au {g["rcs"]}, TVA intracommunautaire {g["vat"]}.<br>
+        Siège social : {g["address"]}.<br>
+        Directeur de la publication : {g["director"]}.<br>
+        Contact : <a href="mailto:{g["email"]}">{g["email"]}</a> — {g["phone"]}.</p>
+
+      <h2>Hébergement</h2>
+      <p>GitHub, Inc. (GitHub Pages), 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107,
+        États-Unis — <a href="https://pages.github.com">pages.github.com</a>.</p>
+
+      <h2>Données personnelles et cookies</h2>
+      <p>Ce site est statique : il ne dépose aucun cookie, n'utilise aucun outil de mesure
+        d'audience et ne collecte aucune donnée personnelle. Il ne charge aucune ressource
+        externe. Les prises de contact se font par e-mail ou via LinkedIn.</p>
+
+      <h2>Propriété intellectuelle</h2>
+      <p>Les textes, images et logos de ce site appartiennent à {g["name"]}, sauf mention
+        contraire. La photo d'en-tête provient de pxhere (licence CC0).</p>
+
+      <h2>Legal notice (English)</h2>
+      <p>Published by {g["name"]} SAS, {g["rcs"]}, VAT {g["vat"]}, {g["address"]}.
+        Publication director: Paul Asquin. Contact: <a href="mailto:{g["email"]}">{g["email"]}</a>.
+        Hosted by GitHub, Inc. No cookies, no tracking, no personal data collected.</p>
+    </div>
+  </section>
+"""
+
+
 def body_404(p):
     return """  <section class="hero">
     <div class="wrap">
@@ -322,6 +370,9 @@ def main():
 
     write("404.html", page("", f"Page not found — {SITE}", body_404,
                            "Page not found.", prefix="/"))
+
+    write("legal/index.html", page("legal/", f"Mentions légales — {SITE}", body_legal,
+                                   f"Mentions légales du site aidiligence.eu, édité par Guardia SAS."))
 
     # The former /about/ page is now a section of the home page.
     write("about/index.html", redirect_stub("../#about", "about/"))
