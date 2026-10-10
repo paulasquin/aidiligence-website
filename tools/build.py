@@ -28,7 +28,7 @@ PUBLISHER = {
     "vat": "FR81910991140",
     "address": "6 rue des Romains, 92270 Bois-Colombes, France",
     "director": "Paul Asquin, Président",
-    "email": "contact.aidiligence@gmail.com",
+    "email": "contact@aidiligence.eu",
     "phone": "+33 7 67 86 10 73",
 }
 
