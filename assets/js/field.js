@@ -92,33 +92,47 @@ function net(n) {
 }
 
 // The AI Diligence mark: half a stagecoach wheel on its axle, the D of
-// Diligence (same proportions as tools/logo.py). The parameter of every
-// particle is its distance from the hub, so a pulse runs out along the spokes.
+// Diligence (same proportions as tools/logo.py): hub and cap, five tapered
+// spokes, felloe and iron tire. The parameter of every particle is its
+// distance from the hub, so a pulse runs out along the spokes.
 function mark(n) {
   const s = new Shape(n), r = rng(7);
   const cyan = C('#6fd6ff'), violet = C('#8b7bff'), ink = C('#efeaff');
-  const k = 2.9 / 104, R = 46 * k, hx = -23 * k, w = 12 * k, sp = 6 * k, hubR = 13 * k;
+  const k = 2.9 / 96.5, R = 46 * k, hx = -17.6 * k;
+  const tire = 4.5 * k, felloe = 7 * k, rf = R - (4.5 / 2 + 3 + 7 / 2) * k;
+  const axle = 10 * k, hubR = 13 * k, hole = 8.5 * k, cap = 4.5 * k;
   const rim = (y) => lerpC(cyan, violet, (1 - y / R) / 2);
   const jit = (a) => (r() - 0.5) * a;
-  const nRim = Math.floor(n * 0.34), nAxle = Math.floor(n * 0.17), nSpoke = Math.floor(n * 0.24), nHub = Math.floor(n * 0.08);
-  for (let i = 0; i < nRim; i++) {
-    const a = (r() - 0.5) * Math.PI, rr = R + jit(w);
-    const x = hx + Math.cos(a) * rr, y = Math.sin(a) * rr;
-    s.push(x, y, jit(w * 0.8), K.RADIAL, 0.999, rim(y).multiplyScalar(0.5 + r() * 0.5));
+  const counts = { tire: 0.13, felloe: 0.2, spoke: 0.22, axle: 0.14, hub: 0.08, cap: 0.03 };
+  const N = Object.fromEntries(Object.entries(counts).map(([key, f]) => [key, Math.floor(n * f)]));
+  const band = (count, rad, width, k0) => {
+    for (let i = 0; i < count; i++) {
+      const a = (r() - 0.5) * Math.PI, rr = rad + jit(width);
+      const y = Math.sin(a) * rr;
+      s.push(hx + Math.cos(a) * rr, y, jit(width), K.RADIAL, Math.min(rr / R, 0.999), rim(y).multiplyScalar(k0 + r() * 0.45));
+    }
+  };
+  band(N.tire, R, tire, 0.55);
+  band(N.felloe, rf, felloe, 0.4);
+  const angles = [1, 2, 3, 4, 5].map((i) => ((-90 + 30 * i) * Math.PI) / 180);
+  const r1 = rf - felloe / 2;
+  for (let i = 0; i < N.spoke; i++) {
+    const a = angles[Math.floor(r() * angles.length)], rr = hubR + r() * (r1 - hubR), u = (rr - hubR) / (r1 - hubR);
+    const c = Math.cos(a), sn = Math.sin(a), o = jit((6 - 2.4 * u) * k);
+    const y = sn * rr + c * o;
+    s.push(hx + c * rr - sn * o, y, jit(4 * k), K.RADIAL, rr / R, rim(y).multiplyScalar(0.55 + r() * 0.45));
   }
-  for (let i = 0; i < nAxle; i++) {
-    const y = (r() * 2 - 1) * (R + w / 2);
-    s.push(hx + jit(w), y, jit(w * 0.8), K.RADIAL, Math.abs(y) / R, ink.clone().multiplyScalar(0.6 + r() * 0.4));
+  for (let i = 0; i < N.axle; i++) {
+    const y = (r() < 0.5 ? -1 : 1) * (hubR + r() * (R - hubR + axle / 2));
+    s.push(hx + jit(axle), y, jit(axle * 0.8), K.RADIAL, Math.abs(y) / R, ink.clone().multiplyScalar(0.6 + r() * 0.4));
   }
-  const angles = [-54, -18, 18, 54].map((d) => (d * Math.PI) / 180);
-  for (let i = 0; i < nSpoke; i++) {
-    const a = angles[Math.floor(r() * angles.length)], t = (hubR + 6 * k) / R + r() * (1 - (w / 2 + 3 * k + hubR + 6 * k) / R);
-    const c = Math.cos(a), sn = Math.sin(a), o = jit(sp);
-    s.push(hx + c * t * R - sn * o, sn * t * R + c * o, jit(sp), K.RADIAL, t, rim(sn * R).multiplyScalar(0.55 + r() * 0.45));
+  for (let i = 0; i < N.hub; i++) {
+    const a = r() * Math.PI * 2, rr = hole + r() * (hubR - hole);
+    s.push(hx + Math.cos(a) * rr, Math.sin(a) * rr, jit(axle * 0.8), K.RADIAL, rr / R, ink.clone().multiplyScalar(0.75 + r() * 0.25));
   }
-  for (let i = 0; i < nHub; i++) {
-    const a = (r() - 0.5) * Math.PI, rr = Math.sqrt(r()) * hubR;
-    s.push(hx + Math.cos(a) * rr, Math.sin(a) * rr, jit(w * 0.6), K.RADIAL, 0, ink.clone().multiplyScalar(0.7 + r() * 0.3));
+  for (let i = 0; i < N.cap; i++) {
+    const a = r() * Math.PI * 2, rr = Math.sqrt(r()) * cap;
+    s.push(hx + Math.cos(a) * rr, Math.sin(a) * rr, jit(axle * 0.8), K.RADIAL, 0, ink.clone().multiplyScalar(0.8 + r() * 0.2));
   }
   while (!s.full) {
     const u = r() * 2 - 1, a = r() * Math.PI * 2, rr = 1.85 + Math.pow(r(), 1.5) * 0.9, q = Math.sqrt(1 - u * u);

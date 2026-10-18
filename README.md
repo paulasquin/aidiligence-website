@@ -59,8 +59,10 @@ Then <http://127.0.0.1:8767/> — `?lang=en` / `?lang=fr` force a language, `?de
 ## Logo
 
 Half a stagecoach wheel standing on its axle, which draws the D of Diligence: the axle is
-the stem, four spokes fan out from the hub to the rim — the stagecoach of the name, and an
-analysis that starts from one point and covers the whole picture.
+the stem, the hub sits on it with its cap, five tapered spokes reach a wooden felloe bolted to
+its iron tire — the stagecoach of the name, and an analysis that starts from one point and
+covers the whole picture. The hub, the double rim and the bolts are what keep it a wheel
+(a first version with four thick spokes read as a lemon slice).
 
 ```bash
 uv run -q --with fonttools --with brotli --with playwright python tools/logo.py

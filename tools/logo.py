@@ -2,9 +2,10 @@
 """Draw the AI Diligence logo and export it.
 
 The mark is half a stagecoach wheel standing on its axle, which draws the D
-of Diligence: the stem is the axle, four spokes fan out from the hub to the
-rim. Everything is computed here, so a change of proportion is a change of
-the constants below.
+of Diligence: the stem is the axle, the hub sits on it with its cap, five
+tapered spokes reach a rim made of a wooden felloe and its iron tire, bolted
+together. Everything is computed here, so a change of proportion is a change
+of the constants below.
 
 Writes:
 - brand/*.svg — mark and lockup, for dark and for light backgrounds; the
@@ -34,10 +35,13 @@ INK_DARK_BG, INK_LIGHT_BG = "#eceaf6", "#14162b"
 BG = "#04050c"
 
 # Mark geometry, in a 128 × 128 box.
-AXLE_X, HUB_Y, RIM_R = 41, 64, 46
-STROKE, SPOKE = 12, 6
-HUB_R = 13
-SPOKE_ANGLES = (-54, -18, 18, 54)  # degrees from the horizontal, rim ends at ±90
+AXLE_X, HUB_Y, RIM_R = 46, 64, 46    # RIM_R: centre line of the tire
+AXLE = 10                            # stem width
+TIRE, FELLOE, RIM_GAP = 4.5, 7, 3.0  # iron tire, wooden felloe inside it, gap between
+HUB_R, HUB_HOLE, CAP_R = 13, 8.5, 4.5
+SPOKES = 5                           # in the half wheel: a 12-spoke wheel
+SPOKE_HUB, SPOKE_RIM = 6, 3.6        # spoke width at the hub and at the felloe
+BOLT_R = 2
 
 
 def gradient(gid, x1, y1, x2, y2):
@@ -47,23 +51,34 @@ def gradient(gid, x1, y1, x2, y2):
 
 
 def mark_paths(ink, gid="g"):
-    """The mark's shapes and its gradient; ink None: the stem and hub take class "ink"."""
+    """The mark's shapes and its gradient; ink None: the axle and hub take class "ink"."""
     x, y, r = AXLE_X, HUB_Y, RIM_R
     fill = f'fill="{ink}"' if ink else 'class="ink"'
     stroke = f'stroke="{ink}"' if ink else 'class="ink"'
-    top, bot = y - r, y + r
-    out = [f"<defs>{gradient(gid, x - 11, top - 2, x + 55, bot + 2)}</defs>",
-           f'<path d="M{x} {top} A{r} {r} 0 0 1 {x} {bot}" fill="none" stroke="url(#{gid})" '
-           f'stroke-width="{STROKE}" stroke-linecap="round"/>']
-    for a in SPOKE_ANGLES:
-        c, s = math.cos(math.radians(a)), math.sin(math.radians(a))
-        r0, r1 = HUB_R + 6, r - STROKE / 2 - 3
-        out.append(f'<line x1="{x + r0 * c:.2f}" y1="{y + r0 * s:.2f}" x2="{x + r1 * c:.2f}" '
-                   f'y2="{y + r1 * s:.2f}" stroke="url(#{gid})" stroke-width="{SPOKE}" '
-                   f'stroke-linecap="round"/>')
-    out.append(f'<path d="M{x} {y - HUB_R} A{HUB_R} {HUB_R} 0 0 1 {x} {y + HUB_R} Z" {fill}/>')
-    out.append(f'<line x1="{x}" y1="{top}" x2="{x}" y2="{bot}" {stroke} '
-               f'stroke-width="{STROKE}" stroke-linecap="round"/>')
+    rf = r - TIRE / 2 - RIM_GAP - FELLOE / 2      # centre line of the felloe
+    angles = [-90 + 180 * (i + 1) / (SPOKES + 1) for i in range(SPOKES)]
+    arc = lambda rr: f"M{x} {y - rr:g} A{rr:g} {rr:g} 0 0 1 {x} {y + rr:g}"
+    bolts = "".join(f'<circle cx="{x + rf * math.cos(math.radians(a)):.2f}" '
+                    f'cy="{y + rf * math.sin(math.radians(a)):.2f}" r="{BOLT_R}" fill="black"/>'
+                    for a in angles)
+    out = [f"<defs>{gradient(gid, x - 16, y - r - 2, x + 50, y + r + 2)}"
+           f'<mask id="{gid}b" maskUnits="userSpaceOnUse" x="0" y="0" width="128" height="128">'
+           f'<rect width="128" height="128" fill="white"/>{bolts}</mask></defs>',
+           f'<path d="{arc(r)}" fill="none" stroke="url(#{gid})" stroke-width="{TIRE}" stroke-linecap="round"/>',
+           f'<path d="{arc(rf)}" fill="none" stroke="url(#{gid})" stroke-width="{FELLOE}" mask="url(#{gid}b)"/>']
+    r1 = rf - FELLOE / 2 + 0.5
+    for a in angles:
+        c, s_ = math.cos(math.radians(a)), math.sin(math.radians(a))
+        pts = [(x + c * rr + s_ * w / 2 * k, y + s_ * rr - c * w / 2 * k)
+               for rr, w, k in ((HUB_HOLE, SPOKE_HUB, 1), (r1, SPOKE_RIM, 1), (r1, SPOKE_RIM, -1), (HUB_HOLE, SPOKE_HUB, -1))]
+        out.append('<path d="M' + " L".join(f"{px:.2f} {py:.2f}" for px, py in pts) + f' Z" fill="url(#{gid})"/>')
+    end = HUB_HOLE + AXLE / 2 + 0.5  # the axle stops under the hub ring, its hole stays open
+    for y0, y1 in ((y - r, y - end), (y + end, y + r)):
+        out.append(f'<line x1="{x}" y1="{y0:g}" x2="{x}" y2="{y1:g}" {stroke} '
+                   f'stroke-width="{AXLE}" stroke-linecap="round"/>')
+    ring = lambda rr: f"M{x - rr} {y} a{rr} {rr} 0 1 0 {2 * rr} 0 a{rr} {rr} 0 1 0 {-2 * rr} 0Z"
+    out.append(f'<path d="{ring(HUB_R)}{ring(HUB_HOLE)}" fill-rule="evenodd" {fill}/>')
+    out.append(f'<path d="{ring(CAP_R)}" {fill}/>')
     return "".join(out)
 
 
@@ -110,8 +125,8 @@ def lockup_svg(ink):
     size = 58
     cap = bold["OS/2"].sCapHeight * size / bold["head"].unitsPerEm
     baseline = HUB_Y + cap / 2
-    left = AXLE_X - STROKE / 2 - 6  # crop the mark's box to the stem
-    x0 = AXLE_X + RIM_R + STROKE / 2 + 20
+    left = AXLE_X - HUB_R - 4  # crop the mark's box to the hub
+    x0 = AXLE_X + RIM_R + TIRE / 2 + 22
     ai, x = text_path(bold, "AI", x0, baseline, size, -0.02)
     x += regular["hmtx"]["space"][0] * size / regular["head"].unitsPerEm * 0.9
     dil, x = text_path(regular, "Diligence", x, baseline, size, -0.02)
