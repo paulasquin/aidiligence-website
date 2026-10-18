@@ -77,14 +77,19 @@ SVGs need no font. Colours: `#6fd6ff` → `#8b7bff` gradient, ink `#eceaf6` on d
 
 ### Intro
 
-On a visitor's first page of the session, the whole wheel rolls in from the right edge of the
-screen without slipping (whole turns, so it stops as drawn), the name appears behind it, then
-its back half fades and the axle grows from the hub: the logo, which then gives way to the
-hero. A click, a key or a scroll speeds it up; it is skipped after the language switch, on a
-link to an anchor and with `prefers-reduced-motion`, and the stylesheet hides it after 7 s if
-the script fails. The wheel (`tools/intro-wheel.svg`) is written by `tools/logo.py` and
-inlined by `tools/build.py`; the timeline is `brandIntro()` in `assets/js/main.js`. To see it
-again: `sessionStorage.removeItem('intro')`, then reload.
+The home page's nav logo is the whole wheel (`tools/brand-wheel.svg`, written by
+`tools/logo.py`, inlined by `tools/build.py`); at rest its back half is hidden, which leaves
+the mark. On a visitor's first page of the session it plays, without covering anything: drawn
+large in the header, the wheel rolls in from past the name without slipping (whole turns, so
+it stops as drawn), the name appears behind it, its back half fades and the axle grows from
+the hub, then the logo shrinks to its place in the nav. The page is usable meanwhile; a click,
+a key or a scroll speeds it up. Skipped after the language switch, on a link to an anchor and
+with `prefers-reduced-motion`; if the script has not started within 6 s the logo is shown at
+rest. The timeline is `brandIntro()` in `assets/js/main.js`. To see it again:
+`sessionStorage.removeItem('intro')`, then reload.
+
+The particle field builds its first shape at once and the others when the browser is idle:
+building them all together held the main thread long enough to make the roll jump.
 
 ## Deployment
 

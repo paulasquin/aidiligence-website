@@ -14,8 +14,8 @@ Writes:
   for LinkedIn;
 - assets/img/mark.svg (the nav), assets/img/favicon.svg (follows the browser's light / dark theme) and
   assets/img/icon-256.png (the avatar, for touch icons) — the site icons.
-- tools/intro-wheel.svg — the whole wheel, inlined by tools/build.py for the
-  intro animation.
+- tools/brand-wheel.svg — the whole wheel, inlined by tools/build.py as the
+  home page's nav logo, which rolls in on arrival.
 
 Usage: uv run -q --with fonttools --with brotli --with playwright python tools/logo.py
 (Playwright renders with the installed Chrome: channel="chrome".)
@@ -102,10 +102,11 @@ def favicon_svg():
 
 
 def wheel_svg(ink):
-    """The whole wheel, hub at (0, 0), for the intro animation (assets/js/main.js).
+    """The whole wheel, hub at (0, 0): the home page's nav logo (assets/js/main.js).
 
     .iw-roll turns while the svg moves; its .iw-back half fades out once the
-    wheel stops and .iw-axle grows from the hub: what is left is the mark.
+    wheel stops and .iw-axle grows from the hub: what is left is the mark. At
+    rest (the stylesheet's default) .iw-back is hidden: the mark as drawn.
     """
     r = RIM_R
     rf = r - TIRE / 2 - RIM_GAP - FELLOE / 2
@@ -132,7 +133,7 @@ def wheel_svg(ink):
     end = HUB_HOLE + AXLE / 2 + 0.5
     ring = lambda rr: f"M{-rr} 0 a{rr} {rr} 0 1 0 {2 * rr} 0 a{rr} {rr} 0 1 0 {-2 * rr} 0Z"
     o = r + TIRE / 2 + 1
-    return (f'<svg class="intro-wheel" viewBox="{-o:g} {-o:g} {2 * o:g} {2 * o:g}" aria-hidden="true">'
+    return (f'<svg class="brand-wheel" viewBox="{-o:g} {-o:g} {2 * o:g} {2 * o:g}" aria-hidden="true">'
             f"<defs>{gradient('iwg', -16, -r - 2, 50, r + 2)}"
             f'<mask id="iwb" maskUnits="userSpaceOnUse" x="{-o:g}" y="{-o:g}" width="{2 * o:g}" height="{2 * o:g}">'
             f'<rect x="{-o:g}" y="{-o:g}" width="{2 * o:g}" height="{2 * o:g}" fill="white"/>{bolts}</mask></defs>'
@@ -232,7 +233,7 @@ def main():
     write("brand/lockup-light-bg.svg", lockup_svg(INK_LIGHT_BG))
     write("assets/img/favicon.svg", favicon_svg())
     write("assets/img/mark.svg", mark_svg(INK_DARK_BG))
-    write("tools/intro-wheel.svg", wheel_svg(INK_DARK_BG))
+    write("tools/brand-wheel.svg", wheel_svg(INK_DARK_BG))
     write("brand/avatar.html", avatar_html(400))
     render_pngs()
     os.remove(os.path.join(BRAND, "avatar.html"))

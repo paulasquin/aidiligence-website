@@ -285,8 +285,13 @@ export class Field {
     this.camera.position.set(0, 0, 7.2);
 
     this.n = count;
-    this.shapes = {};
-    for (const [k, fn] of Object.entries(BUILDERS)) this.shapes[k] = fn(count);
+    // The first shape now, the others when the browser is idle: building them all
+    // at once holds the main thread long enough to make the logo's roll jump.
+    this.shapes = { [start]: BUILDERS[start](count) };
+    const later = Object.keys(BUILDERS).filter((k) => k !== start);
+    const idle = window.requestIdleCallback || ((f) => setTimeout(f, 120));
+    const next = () => { const k = later.shift(); if (!k) return; this.shape(k); idle(next); };
+    idle(next);
 
     const g = new THREE.BufferGeometry();
     const rand = new Float32Array(count * 4), r = rng(99);
@@ -374,9 +379,14 @@ export class Field {
     gsap.to(this.pivot.rotation, { ...rot, duration: 2.2, ease: 'power3.inOut', overwrite: true });
   }
 
+  shape(name) {
+    if (!this.shapes[name] && BUILDERS[name]) this.shapes[name] = BUILDERS[name](this.n);
+    return this.shapes[name];
+  }
+
   /** Fly to a shape, starting from wherever the particles are now. */
   morphTo(name, side) {
-    if (!this.shapes[name]) return;
+    if (!this.shape(name)) return;
     if (name === this.current && side === this.side) return;
     this.side = side;
     if (name === this.current) { this.applyView(false); return; }

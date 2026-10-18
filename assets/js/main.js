@@ -51,43 +51,48 @@ async function setupField() {
 }
 
 /* ---------------- brand intro ---------------- */
-// The whole wheel rolls in from the right edge without slipping (whole turns, so it
-// stops as drawn), the name appears behind it, then its back half fades and
-// the axle grows from the hub: the logo. Any input speeds it up.
+// The nav logo, drawn large: the whole wheel rolls in from past the name without
+// slipping (whole turns, so it stops as drawn), the name appears behind it, its
+// back half fades and the axle grows from the hub; then the logo shrinks to its
+// place in the nav. The page is usable all along; any input speeds it up.
 async function brandIntro() {
   const root = document.documentElement;
   if (!root.classList.contains('intro')) return;
+  root.dataset.intro = 'run';
   try { sessionStorage.setItem('intro', '1'); } catch (e) { /* private mode */ }
-  const ov = $('.intro-overlay'), wheel = $('.intro-wheel'), text = $('.intro-text');
+  const lockup = $('.brand-lockup'), wheel = $('.brand-wheel', lockup), text = $('.brand-text', lockup);
   const roll = $('.iw-roll', wheel), back = $('.iw-back', wheel), axle = $('.iw-axle', wheel);
   await document.fonts.ready;
-  const w = wheel.getBoundingClientRect(), t = text.getBoundingClientRect();
-  const R = (w.width / 2) * (48.25 / 49.25); // the tire's outer radius
-  const cx = w.left + w.width / 2;
-  const turns = Math.max(1, Math.ceil((Math.max(innerWidth, t.right + R) - cx + R) / (2 * Math.PI * R))); // in from the screen edge
+  // In the lockup's own pixels, before its scale.
+  const k = parseFloat(getComputedStyle(lockup).getPropertyValue('--k'));
+  const l = lockup.getBoundingClientRect(), w = wheel.getBoundingClientRect(), t = text.getBoundingClientRect();
+  const R = (w.width / 2 / k) * (48.25 / 49.25); // the tire's outer radius
+  const cx = (w.left + w.width / 2 - l.left) / k, tx = (t.left - l.left) / k, tw = t.width / k;
+  const turns = Math.max(1, Math.ceil((tx + tw - cx + R) / (2 * Math.PI * R)));
   const reveal = () => {
-    const hidden = Math.min(t.width, Math.max(0, cx + gsap.getProperty(wheel, 'x') + R - t.left)); // behind the rim
-    text.style.clipPath = `inset(-20% 0 -20% ${hidden}px)`;
+    const hidden = Math.min(tw, Math.max(0, cx + gsap.getProperty(wheel, 'x') + R - tx)); // behind the rim
+    text.style.clipPath = `inset(-20% -5% -20% ${hidden}px)`;
   };
-  gsap.set(wheel, { x: 2 * Math.PI * R * turns, visibility: 'visible' });
+  gsap.set(lockup, { scale: k, transformOrigin: '0 0' });
+  gsap.set(wheel, { x: 2 * Math.PI * R * turns, opacity: 0, visibility: 'visible' });
   gsap.set(roll, { svgOrigin: '0 0', rotation: 0 });
+  gsap.set(back, { opacity: 1 });
   gsap.set(axle, { svgOrigin: '0 0', scaleY: 0 });
   reveal();
-  await new Promise((resolve) => {
-    const tl = gsap.timeline({ onComplete: resolve });
-    tl.fromTo(wheel, { opacity: 0 }, { opacity: 1, duration: 0.35 }, 0)
-      .to(wheel, { x: 0, duration: 2.4, ease: 'power2.out', onUpdate: reveal }, 0)
-      .to(roll, { rotation: -360 * turns, duration: 2.4, ease: 'power2.out' }, 0)
-      .to(roll, { rotation: -360 * turns + 6, duration: 0.16, ease: 'power1.out' })
-      .to(roll, { rotation: -360 * turns, duration: 0.6, ease: 'elastic.out(1, 0.45)' })
-      .to(back, { opacity: 0, duration: 0.5, ease: 'power2.out' }, '-=0.55')
-      .to(axle, { scaleY: 1, duration: 0.65, ease: 'back.out(2)' }, '<')
-      .to(ov, { opacity: 0, duration: 0.7, ease: 'power2.inOut' }, '+=0.45');
-    const skip = () => tl.timeScale(6);
-    ['pointerdown', 'keydown', 'wheel', 'touchstart'].forEach((e) => addEventListener(e, skip, { once: true, passive: true }));
-  });
   root.classList.remove('intro');
-  ov.remove();
+  const tl = gsap.timeline({
+    onComplete: () => { gsap.set([lockup, wheel], { clearProps: 'all' }); text.style.clipPath = ''; },
+  });
+  tl.to(wheel, { opacity: 1, duration: 0.35 }, 0)
+    .to(wheel, { x: 0, duration: 2.2, ease: 'power2.out', onUpdate: reveal }, 0)
+    .to(roll, { rotation: -360 * turns, duration: 2.2, ease: 'power2.out' }, 0)
+    .to(roll, { rotation: -360 * turns + 6, duration: 0.16, ease: 'power1.out' })
+    .to(roll, { rotation: -360 * turns, duration: 0.6, ease: 'elastic.out(1, 0.45)' })
+    .to(back, { opacity: 0, duration: 0.5, ease: 'power2.out' }, '-=0.55')
+    .to(axle, { scaleY: 1, duration: 0.65, ease: 'back.out(2)' }, '<')
+    .to(lockup, { scale: 1, duration: 1.1, ease: 'power3.inOut' }, '+=0.35');
+  const skip = () => tl.timeScale(5);
+  ['pointerdown', 'keydown', 'wheel', 'touchstart'].forEach((e) => addEventListener(e, skip, { once: true, passive: true }));
 }
 
 /* ---------------- hero intro ---------------- */
@@ -95,10 +100,10 @@ function heroIntro() {
   document.body.classList.remove('is-loading');
   if (reduced) return;
   const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
-  tl.fromTo('.topnav', { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 1.2 }, 0.2)
+  tl.fromTo(['.nav-links', '.lang-switch'], { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 1.2 }, 0.2)
     .fromTo('.ht-word', { yPercent: 115, letterSpacing: '0.12em' }, { yPercent: 0, letterSpacing: '-0.045em', duration: 1.6, stagger: 0.14 }, 0.1)
     .fromTo(['.hero .eyebrow', '.service-lines li', '.hero .hero-cta', '.scroll-cue'], { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 1.2, stagger: 0.1 }, 0.6)
-    .add(() => gsap.set(['.ht-word', '.hero .eyebrow', '.service-lines li', '.hero .hero-cta', '.scroll-cue', '.topnav'], { clearProps: 'transform' }));
+    .add(() => gsap.set(['.ht-word', '.hero .eyebrow', '.service-lines li', '.hero .hero-cta', '.scroll-cue', '.nav-links', '.lang-switch'], { clearProps: 'transform' }));
   // Safety net: Android Chrome has been seen freezing intros.
   setTimeout(() => { if (tl.progress() < 1) tl.progress(1); }, 4000);
 }
@@ -169,9 +174,9 @@ function pointerFx() {
 chrome();
 pointerFx();
 reveals();
-// The field is built after the intro: its set-up blocks the main thread for a
-// moment, which would make the rolling wheel jump.
-brandIntro().finally(() => { heroIntro(); setupField(); });
+heroIntro();
+brandIntro();
+setupField();
 
 let y = null;
 try { y = sessionStorage.getItem('scrollY'); sessionStorage.removeItem('scrollY'); } catch (e) { /* private mode */ }
