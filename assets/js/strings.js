@@ -73,6 +73,7 @@ export const STATIC_EN = {
   "ct.p": "Reach out and let's talk about the scope. I answer on LinkedIn or by email.",
   "ct.cta": "Message me on LinkedIn",
   "ft.tag": "Artificial Intelligence Due Diligence",
+  "ft.legal": "Legal notice",
   "nav.aria": "Main navigation",
   "nav.approach": "Approach",
   "nav.about": "About",

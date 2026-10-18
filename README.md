@@ -5,8 +5,16 @@ dark stage, a three.js particle field that changes shape from section to section
 (ScrollTrigger) reveals and Lenis smooth scrolling. French and English, language picked
 automatically. The `revela.` and `siflo.` subdomains are separate sites, not served from here.
 
-No build step at runtime: three.js 0.186 via an import map, GSAP 3.15 and Lenis 1.3 from
-jsDelivr, fonts (Unbounded, Inter, JetBrains Mono) from Google Fonts.
+No external request at runtime — the legal notice says so, keep it true. Everything is served
+from this repository:
+
+- `assets/vendor/` — three.js 0.186.1 (`three.module.js` + `three.core.js`, the jsDelivr
+  minified builds, renamed so the module's `./three.core.js` import resolves; mapped by the
+  import map), GSAP 3.15.0 + ScrollTrigger, Lenis 1.3.27.
+- `assets/fonts/` — Unbounded, Inter and JetBrains Mono, latin subset of the Google Fonts
+  variable files (SIL Open Font License).
+
+To upgrade a library, download the new pinned build into `assets/vendor/` under the same name.
 
 ## Build
 
@@ -19,7 +27,8 @@ The Python 3 standard library is enough. All page content lives in `tools/build.
 
 - `index.html` — French text, each translatable element tagged `data-i18n="key"`;
 - `assets/js/strings.js` — the English of every key (generated, do not edit by hand);
-- `404.html` and `about/index.html` (redirect to `/#about`).
+- `legal/index.html` (mentions légales, publisher in `PUBLISHER`), `404.html` and
+  `about/index.html` (redirect to `/#about`).
 
 Edit the content in `tools/build.py`, run the build, commit the generated files.
 
@@ -50,3 +59,6 @@ Then <http://127.0.0.1:8767/> — `?lang=en` / `?lang=fr` force a language, `?de
 ## Deployment
 
 GitHub Pages, `main` branch, repository root. The domain is declared by the `CNAME` file.
+
+`google3019c1d90aa83ac3.html` proves ownership of the site to Google Search Console (used for the
+Google Play developer account). Keep it at the root, unchanged: removing it loses the verification.

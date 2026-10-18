@@ -8,7 +8,7 @@ they are the source of truth. The build writes:
   language of the HTML, as on paulasquin.com);
 - assets/js/strings.js, the English of every tagged element, applied in the
   browser by assets/js/i18n.js when the visitor's language is English;
-- 404.html and the about/ redirect.
+- legal/index.html (mentions légales), 404.html and the about/ redirect.
 
 Internal links are relative, so the site works both at a domain root and under
 a sub-path. Exception: 404.html uses absolute paths, since it is served from an
@@ -28,6 +28,18 @@ URL = "https://aidiligence.eu/"
 HUB = "https://paulasquin.com"
 LINKEDIN = "https://www.linkedin.com/in/paulasquin"
 EMAIL = "contact@aidiligence.eu"
+
+# Publisher of the site (mentions légales, LCEN art. 6).
+PUBLISHER = {
+    "name": "Guardia",
+    "form": "société par actions simplifiée (SAS) au capital de 1\u00a0000\u00a0€",
+    "rcs": "RCS Nanterre 910 991 140",
+    "vat": "FR81910991140",
+    "address": "6 rue des Romains, 92270 Bois-Colombes, France",
+    "director": "Paul Asquin, Président",
+    "email": "contact@aidiligence.eu",
+    "phone": "+33 7 67 86 10 73",
+}
 
 LINKEDIN_SVG = (
     '<svg viewBox="0 0 448 512" aria-hidden="true"><path d="M100.28 448H7.4V148.9h92.88zM53.79 '
@@ -69,10 +81,8 @@ LANG_SCRIPT = """<script>
     })();
   </script>"""
 
-FONTS = ('<link rel="preconnect" href="https://fonts.googleapis.com">\n'
-         '  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n'
-         '  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600'
-         '&family=JetBrains+Mono:wght@400;500&family=Unbounded:wght@300;500;700&display=swap" rel="stylesheet">')
+FONTS = ('<link rel="preload" as="font" type="font/woff2" href="assets/fonts/unbounded-latin.woff2" crossorigin>\n'
+         '  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-latin.woff2" crossorigin>')
 
 # --------------------------------------------------------------------------- #
 # Translation
@@ -344,7 +354,7 @@ def body_home():
       </div>
       <footer class="footer">
         <span>© {SITE} — {t("span", "ft.tag", "Due diligence en intelligence artificielle", "Artificial Intelligence Due Diligence")}</span>
-        <span><a href="{HUB}" target="_blank" rel="noopener">paulasquin.com</a> · <a href="{LINKEDIN}" target="_blank" rel="noopener noreferrer">LinkedIn</a> · <a href="mailto:{EMAIL}">{EMAIL}</a></span>
+        <span><a href="{HUB}" target="_blank" rel="noopener">paulasquin.com</a> · <a href="{LINKEDIN}" target="_blank" rel="noopener noreferrer">LinkedIn</a> · <a href="mailto:{EMAIL}">{EMAIL}</a> · {t("a", "ft.legal", "Mentions légales", "Legal notice", ' href="legal/"')}</span>
       </footer>
     </section>"""
 
@@ -378,7 +388,7 @@ def page_home():
   <script type="importmap">
   {{
     "imports": {{
-      "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js"
+      "three": "./assets/vendor/three.module.js"
     }}
   }}
   </script>
@@ -407,9 +417,9 @@ def page_home():
 {body}
   </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.27/dist/lenis.min.js"></script>
+  <script src="assets/vendor/gsap.min.js"></script>
+  <script src="assets/vendor/ScrollTrigger.min.js"></script>
+  <script src="assets/vendor/lenis.min.js"></script>
   <script type="module" src="assets/js/main.js"></script>
 </body>
 </html>
@@ -423,22 +433,33 @@ def strings_js():
             f"export const STATIC_EN = {{\n{lines}\n}};\n")
 
 
-def page_404():
+def subpage(p, title, desc, body, robots=""):
+    """A page without the particle field: 404 and legal notice."""
     return f"""<!doctype html>
 <html lang="fr">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Page introuvable · Page not found — {SITE}</title>
-  <meta name="robots" content="noindex">
+  <title>{html.escape(title)}</title>
+  <meta name="description" content="{html.escape(desc)}">{robots}
   <meta name="theme-color" content="#04050c">
-  <link rel="icon" type="image/png" href="/assets/img/ai-diligence-logo.png">
-  {FONTS}
-  <link href="/assets/css/style.css" rel="stylesheet">
+  <link rel="icon" type="image/png" href="{p}assets/img/ai-diligence-logo.png">
+  <link href="{p}assets/css/style.css" rel="stylesheet">
 </head>
-<body>
+<body class="subpage">
+  <nav class="topnav scrolled">
+    <a href="{p or './'}" class="brand"><span class="brand-mark" aria-hidden="true"></span>AI Diligence</a>
+  </nav>
   <main>
-    <section class="scene contact">
+{body}
+  </main>
+</body>
+</html>
+"""
+
+
+def page_404():
+    return subpage("/", f"Page introuvable · Page not found — {SITE}", "Page not found.", """    <section class="scene contact">
       <div class="wrap">
         <div class="intro">
           <p class="kicker">404</p>
@@ -447,11 +468,45 @@ def page_404():
           <div class="hero-cta center"><a class="btn btn-primary" href="/">AI Diligence</a></div>
         </div>
       </div>
-    </section>
-  </main>
-</body>
-</html>
-"""
+    </section>""", robots='\n  <meta name="robots" content="noindex">')
+
+
+def page_legal():
+    g = {k: html.escape(v) for k, v in PUBLISHER.items()}
+    return subpage("../", f"Mentions légales — {SITE}",
+                   "Mentions légales du site aidiligence.eu, édité par Guardia SAS.", f"""    <section class="scene legal">
+      <div class="wrap">
+        <div class="card">
+          <p class="kicker">Legal notice</p>
+          <h1 class="title">Mentions <em>légales</em></h1>
+
+          <h2>Éditeur</h2>
+          <p>Le site aidiligence.eu est édité par <strong>{g["name"]}</strong>, {g["form"]},
+            immatriculée au {g["rcs"]}, TVA intracommunautaire {g["vat"]}.<br>
+            Siège social : {g["address"]}.<br>
+            Directeur de la publication : {g["director"]}.<br>
+            Contact : <a href="mailto:{g["email"]}">{g["email"]}</a> — {g["phone"]}.</p>
+
+          <h2>Hébergement</h2>
+          <p>GitHub, Inc. (GitHub Pages), 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107,
+            États-Unis — <a href="https://pages.github.com">pages.github.com</a>.</p>
+
+          <h2>Données personnelles et cookies</h2>
+          <p>Ce site est statique : il ne dépose aucun cookie, n'utilise aucun outil de mesure
+            d'audience et ne collecte aucune donnée personnelle. Il ne charge aucune ressource
+            externe. Les prises de contact se font par e-mail ou via LinkedIn.</p>
+
+          <h2>Propriété intellectuelle</h2>
+          <p>Les textes, images et logos de ce site appartiennent à {g["name"]}, sauf mention
+            contraire.</p>
+
+          <h2>Legal notice (English)</h2>
+          <p>Published by {g["name"]} SAS, {g["rcs"]}, VAT {g["vat"]}, {g["address"]}.
+            Publication director: Paul Asquin. Contact: <a href="mailto:{g["email"]}">{g["email"]}</a>.
+            Hosted by GitHub, Inc. No cookies, no tracking, no personal data collected.</p>
+        </div>
+      </div>
+    </section>""")
 
 
 def redirect_stub(target, canonical):
@@ -484,6 +539,7 @@ def main():
     write("index.html", page_home())
     write("assets/js/strings.js", strings_js())
     write("404.html", page_404())
+    write("legal/index.html", page_legal())
     # The former /about/ page is now a section of the home page.
     write("about/index.html", redirect_stub("../#about", "about/"))
     print("Done.")

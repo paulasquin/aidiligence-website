@@ -32,14 +32,13 @@
     })();
   </script>
   <link rel="icon" type="image/png" href="assets/img/ai-diligence-logo.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Unbounded:wght@300;500;700&display=swap" rel="stylesheet">
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/unbounded-latin.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-latin.woff2" crossorigin>
   <link href="assets/css/style.css" rel="stylesheet">
   <script type="importmap">
   {
     "imports": {
-      "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js"
+      "three": "./assets/vendor/three.module.js"
     }
   }
   </script>
@@ -246,14 +245,14 @@
       </div>
       <footer class="footer">
         <span>© AI Diligence — <span data-i18n="ft.tag">Due diligence en intelligence artificielle</span></span>
-        <span><a href="https://paulasquin.com" target="_blank" rel="noopener">paulasquin.com</a> · <a href="https://www.linkedin.com/in/paulasquin" target="_blank" rel="noopener noreferrer">LinkedIn</a> · <a href="mailto:contact@aidiligence.eu">contact@aidiligence.eu</a></span>
+        <span><a href="https://paulasquin.com" target="_blank" rel="noopener">paulasquin.com</a> · <a href="https://www.linkedin.com/in/paulasquin" target="_blank" rel="noopener noreferrer">LinkedIn</a> · <a href="mailto:contact@aidiligence.eu">contact@aidiligence.eu</a> · <a href="legal/" data-i18n="ft.legal">Mentions légales</a></span>
       </footer>
     </section>
   </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.27/dist/lenis.min.js"></script>
+  <script src="assets/vendor/gsap.min.js"></script>
+  <script src="assets/vendor/ScrollTrigger.min.js"></script>
+  <script src="assets/vendor/lenis.min.js"></script>
   <script type="module" src="assets/js/main.js"></script>
 </body>
 </html>
