@@ -36,10 +36,9 @@ function webglOK() {
 
 async function setupField() {
   if (!webglOK()) { document.documentElement.classList.add('no-webgl'); return; }
-  const { Field, markPoints } = await import('./field.js');
-  const pts = await markPoints('assets/img/ai-diligence-mark.png').catch(() => null);
+  const { Field } = await import('./field.js');
   const small = innerWidth < 860 || (navigator.hardwareConcurrency || 8) <= 4;
-  const field = new Field($('#field'), { count: small ? 9000 : 22000, reduced, markPoints: pts });
+  const field = new Field($('#field'), { count: small ? 9000 : 22000, reduced });
   if (location.search.includes('debug')) window.__field = field;
   let vel = 0;
   lenis?.on('scroll', (l) => { vel = l.velocity; });

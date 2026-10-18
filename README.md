@@ -50,11 +50,28 @@ Then <http://127.0.0.1:8767/> — `?lang=en` / `?lang=fr` force a language, `?de
   choice, then the browser languages; English is applied from `strings.js` at boot.
 - `assets/js/field.js` — the particle field, adapted from paulasquin.com. Each section names
   a shape (`data-shape`) and the side of the screen it sits on (`data-side`: -1, 0, 1).
-  Shapes: `mark` (the AI Diligence logo, sampled at runtime from
-  `assets/img/ai-diligence-mark.png`), `galaxy`, `stack` (four layers of an AI stack scanned
+  Shapes: `mark` (the AI Diligence logo, drawn with the proportions of `tools/logo.py`,
+  a pulse running from the hub out along the spokes), `galaxy`, `stack` (four layers of an AI stack scanned
   from bottom to top), `net` (neural network with a forward pass), `orb`. Every shape must
   fill exactly `n` particles.
 - `assets/og.jpg` — capture of the hero at 1200×630, used for link previews.
+
+## Logo
+
+Half a stagecoach wheel standing on its axle, which draws the D of Diligence: the axle is
+the stem, four spokes fan out from the hub to the rim — the stagecoach of the name, and an
+analysis that starts from one point and covers the whole picture.
+
+```bash
+uv run -q --with fonttools --with brotli --with playwright python tools/logo.py
+```
+
+writes `brand/` — mark and lockup as SVG and PNG, for dark (`-dark-bg`) and light
+(`-light-bg`) backgrounds, and `aidiligence-linkedin-logo.png` (1200×1200, the mark on the
+site's dark background) — plus the site icons `assets/img/mark.svg`, `favicon.svg` (follows
+the browser theme) and `icon-256.png`. The lockup's text is outlined from Unbounded, so the
+SVGs need no font. Colours: `#6fd6ff` → `#8b7bff` gradient, ink `#eceaf6` on dark,
+`#14162b` on light.
 
 ## Deployment
 

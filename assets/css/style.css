@@ -68,14 +68,7 @@ main, .topnav { position: relative; z-index: 2; }
   padding-top: 12px; padding-bottom: 12px;
 }
 .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font: 500 15px/1 var(--display); letter-spacing: .02em; }
-/* The logo, used as a mask so it takes the gradient of the page. */
-.brand-mark {
-  width: 24px; height: 24px; flex: none;
-  background: linear-gradient(135deg, #6fd6ff, #8b7bff);
-  -webkit-mask: url(../img/ai-diligence-mark.png) center / contain no-repeat;
-  mask: url(../img/ai-diligence-mark.png) center / contain no-repeat;
-  filter: drop-shadow(0 0 8px rgba(139, 123, 255, .6));
-}
+.brand-mark { width: 28px; height: 28px; flex: none; margin: -3px 0 -3px -4px; filter: drop-shadow(0 0 8px rgba(139, 123, 255, .5)); }
 .nav-links { display: flex; align-items: center; gap: 26px; margin-left: auto; }
 .nav-links a { text-decoration: none; font-size: 14px; color: var(--muted); transition: color .25s; position: relative; }
 .nav-links a::after {
