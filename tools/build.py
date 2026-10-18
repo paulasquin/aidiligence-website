@@ -29,16 +29,15 @@ HUB = "https://paulasquin.com"
 LINKEDIN = "https://www.linkedin.com/in/paulasquin"
 EMAIL = "contact@aidiligence.eu"
 
-# Publisher of the site (mentions légales, LCEN art. 6).
+# Publisher of the site (mentions légales). By choice, neither the registered office nor a
+# phone number is published: the SIREN number identifies the company.
 PUBLISHER = {
     "name": "Guardia",
     "form": "société par actions simplifiée (SAS) au capital de 1\u00a0000\u00a0€",
-    "rcs": "RCS Nanterre 910 991 140",
+    "siren": "910 991 140",
     "vat": "FR81910991140",
-    "address": "6 rue des Romains, 92270 Bois-Colombes, France",
     "director": "Paul Asquin, Président",
     "email": "contact@aidiligence.eu",
-    "phone": "+33 7 67 86 10 73",
 }
 
 LINKEDIN_SVG = (
@@ -674,10 +673,9 @@ def page_legal():
 
           <h2>Éditeur</h2>
           <p>Le site aidiligence.eu est édité par <strong>{g["name"]}</strong>, {g["form"]},
-            immatriculée au {g["rcs"]}, TVA intracommunautaire {g["vat"]}.<br>
-            Siège social : {g["address"]}.<br>
+            SIREN {g["siren"]}, TVA intracommunautaire {g["vat"]}.<br>
             Directeur de la publication : {g["director"]}.<br>
-            Contact : <a href="mailto:{g["email"]}">{g["email"]}</a> — {g["phone"]}.</p>
+            Contact : <a href="mailto:{g["email"]}">{g["email"]}</a>.</p>
 
           <h2>Hébergement</h2>
           <p>GitHub, Inc. (GitHub Pages), 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107,
@@ -693,7 +691,7 @@ def page_legal():
             contraire.</p>
 
           <h2>Legal notice (English)</h2>
-          <p>Published by {g["name"]} SAS, {g["rcs"]}, VAT {g["vat"]}, {g["address"]}.
+          <p>Published by {g["name"]} SAS, SIREN {g["siren"]}, VAT {g["vat"]}.
             Publication director: Paul Asquin. Contact: <a href="mailto:{g["email"]}">{g["email"]}</a>.
             Hosted by GitHub, Inc. No cookies, no tracking, no personal data collected.</p>
         </div>
