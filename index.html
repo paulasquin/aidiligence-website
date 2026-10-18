@@ -1,182 +1,258 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="fr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AI Diligence — Artificial Intelligence Due Diligence</title>
-<meta name="description" content="AI due diligence: a comprehensive technical evaluation of a company&#x27;s AI stack — product viability, model integrity, running costs, licensing and scalability.">
-<link rel="icon" type="image/png" href="assets/img/ai-diligence-logo.png">
-<link rel="preload" as="font" type="font/woff2" href="assets/fonts/montserrat-latin.woff2" crossorigin>
-<link rel="preload" as="font" type="font/woff2" href="assets/fonts/opensans-latin.woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/style.css">
-<meta property="og:title" content="AI Diligence — Artificial Intelligence Due Diligence">
-<meta property="og:description" content="AI due diligence: a comprehensive technical evaluation of a company&#x27;s AI stack — product viability, model integrity, running costs, licensing and scalability.">
-<meta property="og:type" content="website">
-<meta property="og:image" content="https://aidiligence.eu/assets/img/ai-diligence-logo.png">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Diligence — Due diligence en intelligence artificielle</title>
+  <meta name="description" content="Due diligence IA : une évaluation technique complète de la stack IA d&#x27;une entreprise — viabilité du produit, intégrité des modèles, coûts d&#x27;exploitation, licences et passage à l&#x27;échelle.">
+  <meta name="theme-color" content="#04050c">
+  <link rel="canonical" href="https://aidiligence.eu/">
+  <link rel="alternate" hreflang="fr" href="https://aidiligence.eu/?lang=fr">
+  <link rel="alternate" hreflang="en" href="https://aidiligence.eu/?lang=en">
+  <link rel="alternate" hreflang="x-default" href="https://aidiligence.eu/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://aidiligence.eu/">
+  <meta property="og:title" content="AI Diligence — Due diligence en intelligence artificielle">
+  <meta property="og:description" content="Due diligence IA : une évaluation technique complète de la stack IA d&#x27;une entreprise — viabilité du produit, intégrité des modèles, coûts d&#x27;exploitation, licences et passage à l&#x27;échelle.">
+  <meta property="og:image" content="https://aidiligence.eu/assets/og.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <script>
+    (function () {
+      var ok = ['fr', 'en'], lang = null;
+      try {
+        var q = new URLSearchParams(location.search).get('lang');
+        if (ok.indexOf(q) >= 0) { lang = q; localStorage.setItem('lang', q); }
+        else if (ok.indexOf(localStorage.getItem('lang')) >= 0) lang = localStorage.getItem('lang');
+      } catch (e) {}
+      if (!lang) {
+        var ls = navigator.languages || [navigator.language || ''];
+        for (var i = 0; i < ls.length && !lang; i++) { var b = String(ls[i]).slice(0, 2).toLowerCase(); if (ok.indexOf(b) >= 0) lang = b; }
+      }
+      document.documentElement.lang = lang || 'en';
+    })();
+  </script>
+  <link rel="icon" type="image/png" href="assets/img/ai-diligence-logo.png">
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/unbounded-latin.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-latin.woff2" crossorigin>
+  <link href="assets/css/style.css" rel="stylesheet">
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "./assets/vendor/three.module.js"
+    }
+  }
+  </script>
 </head>
-<body>
+<body class="is-loading">
+  <canvas id="field" class="field" aria-hidden="true"></canvas>
+  <div class="veil" aria-hidden="true"></div>
+  <div class="scroll-progress" aria-hidden="true"><span></span></div>
 
-<header class="site-header">
-  <div class="wrap">
-    <a class="brand" href="./">
-      <img src="assets/img/ai-diligence-mark.png" alt="" height="30">
-      <span>AI Diligence</span>
-    </a>
-    <nav class="nav">
+  <nav class="topnav" aria-label="Navigation principale" data-i18n-aria="nav.aria">
+    <a href="#top" class="brand"><span class="brand-mark" aria-hidden="true"></span>AI Diligence</a>
+    <div class="nav-links">
+      <a href="#approach" data-i18n="nav.approach">Approche</a>
       <a href="#due-diligence">Due diligence</a>
       <a href="#expertise">Expertise</a>
-      <a href="#about">About</a>
-      <a href="https://www.linkedin.com/in/paulasquin" target="_blank" rel="noopener noreferrer">Contact</a>
-    </nav>
-  </div>
-</header>
-
-<main>
-  <section class="hero">
-    <div class="wrap">
-      <h1>AI Diligence</h1>
-      <ul class="service-lines">
-        <li>AI &amp; MLOps Engineering</li>
-        <li>AI Stack Due Diligence Audit</li>
-        <li>AI Team &amp; Project Management</li>
-      </ul>
-      <a class="btn on-photo" href="https://www.linkedin.com/in/paulasquin" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 448 512" aria-hidden="true"><path d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-12.4-58.4-43.4-58.4-23.7 0-37.8 15.9-44 31.3-2.3 5.5-2.9 13.2-2.9 20.9V448h-92.8s1.2-241.1 0-266.1h92.8v37.7c12.3-19 34.4-46.1 83.7-46.1 61.1 0 106.9 39.9 106.9 125.7V448z"/></svg><span>Get in touch</span></a>
+      <a href="#about" data-i18n="nav.about">À propos</a>
+      <a href="#contact">Contact</a>
+      <a class="nav-hub" href="https://paulasquin.com" target="_blank" rel="noopener">paulasquin.com ↗</a>
     </div>
-  </section>
-
-  <div class="panel-holder">
-    <div class="wrap">
-      <div class="panel">
-      <div class="pillar">
-        <div class="icon blue"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9.8" r="4.6"/><path d="M9.7 16.9h4.6M10.5 19.8h3"/></svg></div>
-        <h3>AI in Innovation</h3>
-        <p>AI technologies have become a main asset for innovative companies, especially when considering investments. The multiplication of actors raises questions on their differentiation and competitiveness.</p>
-      </div>
-      <div class="pillar">
-        <div class="icon green"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.4" cy="10.4" r="6"/><path d="M14.9 14.9L20 20"/></svg></div>
-        <h3>Technical Due Diligence</h3>
-        <p>Our AI due diligence services provide a comprehensive evaluation of a company&#x27;s technological foundation, enhancing traditional due diligence efforts.</p>
-      </div>
-      <div class="pillar">
-        <div class="icon amber"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.6"/><path d="M8.1 12.4l2.8 2.8 5.1-5.6"/></svg></div>
-        <h3>AI Expertise</h3>
-        <p>We ensure your investment is not only based on potential but grounded in a robust technological infrastructure. We provide precise technology recommendations.</p>
-      </div>
-      <div class="pillar">
-        <div class="icon purple"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.6h16" stroke-width="1.9"/><path d="M7.6 19.6V13M12 19.6V8.4M16.4 19.6V11.2" stroke-width="2.6"/></svg></div>
-        <h3>Insights</h3>
-        <p>Our services empower you with actionable insights, ensuring investments and technological choices are aligned with current industry standards and future advancements.</p>
-      </div>
-      </div>
+    <div class="lang-switch" role="group" aria-label="Langue" data-i18n-aria="nav.lang">
+      <button type="button" data-lang="fr">FR</button><button type="button" data-lang="en">EN</button>
     </div>
-  </div>
+  </nav>
 
-  <section class="section" id="due-diligence">
-    <div class="wrap">
-      <h2 class="section-title">Key Focus Areas in Our AI Due Diligence</h2>
-      <p class="lede">Eight angles of assessment, from product readiness to licensing
-        economics and sector-specific regulatory exposure.</p>
-      <div class="focus">
-        <div>
-          <h3>Product Viability</h3>
-          <p>Is the product market-ready or just a demo? Can it be sold as is, and what is its scalability potential?</p>
-        </div>
-        <div>
-          <h3>Model and Data Integrity</h3>
-          <p>Scrutinizing the robustness of models, data sources, and IP. Evaluating technical reproducibility, beyond legal protections.</p>
-        </div>
-        <div>
-          <h3>Technology Longevity and Defendability</h3>
-          <p>Assessing the long-term viability of the technology. Identifying data sources and model performances against the state of the art.</p>
-        </div>
-        <div>
-          <h3>Team and Expertise</h3>
-          <p>Assessing the team&#x27;s balance, diversity, and dependence on key individuals.</p>
-        </div>
-        <div>
-          <h3>Technical Implementation</h3>
-          <p>Examining code quality, containerisation and test coverage. Ensuring documentation, version control, and sustainability.</p>
-        </div>
-        <div>
-          <h3>Licensing and Scalability</h3>
-          <p>Evaluating the technology licensing model. Projecting how costs will scale with operational growth.</p>
-        </div>
-        <div>
-          <h3>Costs and Performances</h3>
-          <p>Examining technical choices and avoidable latencies, challenging architectures and technologies, both custom-made and off-the-shelf.</p>
-        </div>
-        <div>
-          <h3>Industry-specific Considerations</h3>
-          <p>For healthcare, sovereignty, medical devices and other regulated fields, identifying the risks associated with the technologies in the stack — current and future, from a technical standpoint.</p>
+  <main>
+    <!-- Hero -->
+    <section id="top" class="scene hero" data-shape="mark" data-side="1">
+      <div class="wrap">
+        <div class="hero-content">
+          <p class="eyebrow"><span class="pulse-dot"></span><span data-i18n="hero.eyebrow">Due diligence en intelligence artificielle</span></p>
+          <h1 class="hero-title">
+            <span class="ht-line"><span class="ht-word">AI</span></span>
+            <span class="ht-line"><span class="ht-word ht-glow">Diligence</span></span>
+          </h1>
+          <ul class="service-lines">
+            <li><span class="sl-num">01</span><span data-i18n="hero.l1">Ingénierie IA &amp; MLOps</span></li>
+            <li><span class="sl-num">02</span><span data-i18n="hero.l2">Audit de stack IA (due diligence)</span></li>
+            <li><span class="sl-num">03</span><span data-i18n="hero.l3">Pilotage d'équipes et de projets IA</span></li>
+          </ul>
+          <p class="hero-sub" data-i18n="hero.sub">Une évaluation technique complète de la stack IA d'une entreprise : viabilité du produit, intégrité des modèles, coûts d'exploitation, licences et passage à l'échelle.</p>
+          <div class="hero-cta">
+            <a class="btn btn-primary magnetic" href="https://www.linkedin.com/in/paulasquin" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 448 512" aria-hidden="true"><path d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-12.4-58.4-43.4-58.4-23.7 0-37.8 15.9-44 31.3-2.3 5.5-2.9 13.2-2.9 20.9V448h-92.8s1.2-241.1 0-266.1h92.8v37.7c12.3-19 34.4-46.1 83.7-46.1 61.1 0 106.9 39.9 106.9 125.7V448z"/></svg><span data-i18n="hero.cta1">Prendre contact</span></a>
+            <a href="#due-diligence" class="btn btn-ghost magnetic"><span data-i18n="hero.cta2">Les 8 axes d'audit</span></a>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+      <div class="scroll-cue" aria-hidden="true"><span></span><i data-i18n="hero.scroll">Défiler</i></div>
+    </section>
 
-  <section class="photo-section" id="expertise">
-    <div class="wrap">
-      <div class="float-card">
-        <h2 class="section-title">More from our AI expertise</h2>
-        <p class="section-kicker">Improve your AI projects</p>
-        <p>Leverage on our experience to improve:</p>
-        <ul class="caps">
-          <li>Cloud or self-hosting running costs</li>
-          <li>Model inference responsiveness</li>
-          <li>Code base quality</li>
-          <li>Model efficiency</li>
-          <li>Prompt engineering</li>
-          <li>Model benchmarking</li>
-          <li>Projects architecture</li>
-          <li>Scalability</li>
-        </ul>
-        <p>And more — get in touch for a demonstration on your own use cases.</p>
-        <p style="margin-top:26px"><a class="btn" href="https://www.linkedin.com/in/paulasquin" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 448 512" aria-hidden="true"><path d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-12.4-58.4-43.4-58.4-23.7 0-37.8 15.9-44 31.3-2.3 5.5-2.9 13.2-2.9 20.9V448h-92.8s1.2-241.1 0-266.1h92.8v37.7c12.3-19 34.4-46.1 83.7-46.1 61.1 0 106.9 39.9 106.9 125.7V448z"/></svg><span>Discuss a use case</span></a></p>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="about">
-    <div class="wrap">
-      <h2 class="section-title">About</h2>
-      <p class="section-kicker">Founder</p>
-      <div class="founder">
-        <img src="assets/img/paul-asquin.jpg" alt="Paul Asquin" loading="lazy">
-        <div>
-          <h3>Paul Asquin</h3>
-          <p>Experienced as Head of AI in vision and language processing, CTO of Guardia and AI freelancer, I graduated from Centrale Paris and hold two MScs: one in AI and computer science, the other in robotics.</p>
-          <p>I created AI Diligence in 2023 to offer my expertise and network.</p>
+    <!-- Approach -->
+    <section id="approach" class="scene scene-short" data-shape="galaxy" data-side="0">
+      <div class="wrap">
+        <div class="intro reveal">
+          <p class="kicker" data-i18n="ap.k">Approche</p>
+          <h2 class="title title-xl" data-i18n="ap.t">Investir dans l'IA, <em>sur des bases solides</em></h2>
+        </div>
+        <div class="tiles pillars">
+          <div class="tile pillar reveal" style="--accent:#6fd6ff">
+            <span class="pillar-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9.8" r="4.6"/><path d="M9.7 16.9h4.6M10.5 19.8h3"/></svg></span>
+            <h3 data-i18n="pl1.t">L'IA dans l'innovation</h3>
+            <p data-i18n="pl1.p">Les technologies d'IA sont devenues un atout majeur des entreprises innovantes, en particulier dans une perspective d'investissement. La multiplication des acteurs interroge leur différenciation et leur compétitivité.</p>
+          </div>
+          <div class="tile pillar reveal" style="--accent:#4fe0c0">
+            <span class="pillar-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.4" cy="10.4" r="6"/><path d="M14.9 14.9L20 20"/></svg></span>
+            <h3 data-i18n="pl2.t">Due diligence technique</h3>
+            <p data-i18n="pl2.p">Nos services de due diligence IA offrent une évaluation complète des fondations technologiques d'une entreprise, en complément de la due diligence traditionnelle.</p>
+          </div>
+          <div class="tile pillar reveal" style="--accent:#ffb37a">
+            <span class="pillar-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.6"/><path d="M8.1 12.4l2.8 2.8 5.1-5.6"/></svg></span>
+            <h3 data-i18n="pl3.t">Expertise IA</h3>
+            <p data-i18n="pl3.p">Nous veillons à ce que votre investissement ne repose pas seulement sur un potentiel, mais sur une infrastructure technologique robuste. Nous formulons des recommandations technologiques précises.</p>
+          </div>
+          <div class="tile pillar reveal" style="--accent:#a78bff">
+            <span class="pillar-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.6h16" stroke-width="1.9"/><path d="M7.6 19.6V13M12 19.6V8.4M16.4 19.6V11.2" stroke-width="2.6"/></svg></span>
+            <h3 data-i18n="pl4.t">Éclairages</h3>
+            <p data-i18n="pl4.p">Nos services vous apportent des éclairages concrets, pour des investissements et des choix technologiques alignés sur les standards actuels du secteur et ses évolutions à venir.</p>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="cta-band">
-    <div class="wrap">
-      <h2>Assessing an AI stack?</h2>
-      <p>Reach out and let's talk about the scope.</p>
-      <a class="btn" href="https://www.linkedin.com/in/paulasquin" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 448 512" aria-hidden="true"><path d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-12.4-58.4-43.4-58.4-23.7 0-37.8 15.9-44 31.3-2.3 5.5-2.9 13.2-2.9 20.9V448h-92.8s1.2-241.1 0-266.1h92.8v37.7c12.3-19 34.4-46.1 83.7-46.1 61.1 0 106.9 39.9 106.9 125.7V448z"/></svg><span>Message me on LinkedIn</span></a>
-    </div>
-  </section>
+    <!-- Focus areas -->
+    <section id="due-diligence" class="scene" data-shape="stack" data-side="1">
+      <div class="wrap">
+        <div class="card card-wide reveal">
+          <p class="kicker" data-i18n="fa.k">Due diligence · 8 axes</p>
+          <h2 class="title" data-i18n="fa.t">Les axes clés de <em>notre due diligence IA</em></h2>
+          <p class="lede" data-i18n="fa.p">Huit angles d'évaluation, de la maturité du produit à l'économie des licences et à l'exposition réglementaire propre à chaque secteur.</p>
+          <div class="focus">
+            <div class="focus-item">
+              <span class="fi-num">01</span>
+              <h3 data-i18n="fa1.t">Viabilité du produit</h3>
+              <p data-i18n="fa1.p">Le produit est-il prêt pour le marché, ou n'est-ce qu'une démo ? Peut-il être vendu en l'état, et quel est son potentiel de passage à l'échelle ?</p>
+            </div>
+            <div class="focus-item">
+              <span class="fi-num">02</span>
+              <h3 data-i18n="fa2.t">Intégrité des modèles et des données</h3>
+              <p data-i18n="fa2.p">Examiner la robustesse des modèles, des sources de données et de la propriété intellectuelle. Évaluer la reproductibilité technique, au-delà des protections juridiques.</p>
+            </div>
+            <div class="focus-item">
+              <span class="fi-num">03</span>
+              <h3 data-i18n="fa3.t">Pérennité et défendabilité de la technologie</h3>
+              <p data-i18n="fa3.p">Évaluer la viabilité de la technologie à long terme. Identifier les sources de données et situer les performances des modèles par rapport à l'état de l'art.</p>
+            </div>
+            <div class="focus-item">
+              <span class="fi-num">04</span>
+              <h3 data-i18n="fa4.t">Équipe et expertise</h3>
+              <p data-i18n="fa4.p">Évaluer l'équilibre et la diversité de l'équipe, et sa dépendance à des personnes clés.</p>
+            </div>
+            <div class="focus-item">
+              <span class="fi-num">05</span>
+              <h3 data-i18n="fa5.t">Mise en œuvre technique</h3>
+              <p data-i18n="fa5.p">Examiner la qualité du code, la conteneurisation et la couverture de tests. S'assurer de la documentation, du versionnement et de la pérennité.</p>
+            </div>
+            <div class="focus-item">
+              <span class="fi-num">06</span>
+              <h3 data-i18n="fa6.t">Licences et passage à l'échelle</h3>
+              <p data-i18n="fa6.p">Évaluer le modèle de licence de la technologie. Projeter l'évolution des coûts avec la croissance de l'activité.</p>
+            </div>
+            <div class="focus-item">
+              <span class="fi-num">07</span>
+              <h3 data-i18n="fa7.t">Coûts et performances</h3>
+              <p data-i18n="fa7.p">Examiner les choix techniques et les latences évitables, challenger les architectures et les technologies, développées sur mesure ou sur étagère.</p>
+            </div>
+            <div class="focus-item">
+              <span class="fi-num">08</span>
+              <h3 data-i18n="fa8.t">Spécificités sectorielles</h3>
+              <p data-i18n="fa8.p">Pour la santé, la souveraineté, les dispositifs médicaux et les autres secteurs réglementés, identifier les risques liés aux technologies de la stack — actuels et futurs, d'un point de vue technique.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-</main>
+    <!-- Expertise -->
+    <section id="expertise" class="scene" data-shape="net" data-side="-1">
+      <div class="wrap wrap-right">
+        <div class="card reveal">
+          <p class="kicker" data-i18n="ex.k">Expertise · améliorer vos projets d'IA</p>
+          <h2 class="title" data-i18n="ex.t">Plus de notre <em>expertise IA</em></h2>
+          <p class="lede" data-i18n="ex.p">Profitez de notre expérience pour améliorer :</p>
+          <ul class="caps">
+              <li data-i18n="cap1">Coûts d'exploitation, cloud ou auto-hébergé</li>
+              <li data-i18n="cap2">Réactivité de l'inférence des modèles</li>
+              <li data-i18n="cap3">Qualité du code</li>
+              <li data-i18n="cap4">Efficacité des modèles</li>
+              <li data-i18n="cap5">Prompt engineering</li>
+              <li data-i18n="cap6">Benchmark de modèles</li>
+              <li data-i18n="cap7">Architecture des projets</li>
+              <li data-i18n="cap8">Passage à l'échelle</li>
+          </ul>
+          <p class="more" data-i18n="ex.more">Et plus encore — contactez-nous pour une démonstration sur vos propres cas d'usage.</p>
+          <div class="card-cta"><a class="btn btn-primary magnetic" href="https://www.linkedin.com/in/paulasquin" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 448 512" aria-hidden="true"><path d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-12.4-58.4-43.4-58.4-23.7 0-37.8 15.9-44 31.3-2.3 5.5-2.9 13.2-2.9 20.9V448h-92.8s1.2-241.1 0-266.1h92.8v37.7c12.3-19 34.4-46.1 83.7-46.1 61.1 0 106.9 39.9 106.9 125.7V448z"/></svg><span data-i18n="ex.cta">Parler d'un cas d'usage</span></a></div>
+        </div>
+      </div>
+      <div class="marquee" aria-hidden="true">
+        <div class="marquee-track">
+          <span data-i18n="mq1">Coûts d'exploitation, cloud ou auto-hébergé</span><b>✦</b>
+          <span data-i18n="mq2">Réactivité de l'inférence des modèles</span><b>✦</b>
+          <span data-i18n="mq3">Qualité du code</span><b>✦</b>
+          <span data-i18n="mq4">Efficacité des modèles</span><b>✦</b>
+          <span data-i18n="mq5">Prompt engineering</span><b>✦</b>
+          <span data-i18n="mq6">Benchmark de modèles</span><b>✦</b>
+          <span data-i18n="mq7">Architecture des projets</span><b>✦</b>
+          <span data-i18n="mq8">Passage à l'échelle</span><b>✦</b>
+        </div>
+      </div>
+    </section>
 
-<footer class="site-footer">
-  <div class="wrap">
-    <p>&copy; AI Diligence — Artificial Intelligence Due Diligence ·
-      <a href="https://www.linkedin.com/in/paulasquin" target="_blank" rel="noopener noreferrer">LinkedIn</a> ·
-      <a href="legal/">Mentions légales</a></p>
-  </div>
-</footer>
+    <!-- About -->
+    <section id="about" class="scene" data-shape="orb" data-side="1">
+      <div class="wrap">
+        <div class="card about reveal">
+          <img class="portrait" src="assets/img/paul-asquin.jpg" alt="Paul Asquin" loading="lazy" width="601" height="800">
+          <div>
+            <p class="kicker" data-i18n="ab.k">À propos · Fondateur</p>
+            <h2 class="title">Paul <em>Asquin</em></h2>
+            <p data-i18n="ab.p1">Fort d'une expérience de Head of AI en vision et en traitement du langage, de CTO de Guardia et de freelance en IA, je suis diplômé de Centrale Paris et titulaire de deux MSc : l'un en intelligence artificielle et informatique, l'autre en robotique.</p>
+            <p data-i18n="ab.p2">J'ai créé AI Diligence en 2023 pour mettre à disposition mon expertise et mon réseau.</p>
+            <ul class="facts">
+              <li><b>Centrale Paris</b><span data-i18n="ab.f1">ingénieur</span></li>
+              <li><b>2 MSc</b><span data-i18n="ab.f2">IA &amp; informatique · robotique</span></li>
+              <li><b>Head of AI</b><span data-i18n="ab.f3">vision &amp; langage</span></li>
+              <li><b>CTO</b><span>Guardia</span></li>
+            </ul>
+            <p class="card-cta"><a class="btn btn-ghost magnetic" href="https://paulasquin.com" target="_blank" rel="noopener"><span data-i18n="ab.hub">Mes projets sur paulasquin.com</span><span class="arrow">↗</span></a></p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-<script>
-(function () {
-  var h = document.querySelector('.site-header'), hero = document.querySelector('.hero');
-  if (!h || !hero) return;
-  function sync() { h.classList.toggle('over-hero', window.scrollY < hero.offsetHeight - 70); }
-  sync();
-  addEventListener('scroll', sync, { passive: true });
-  addEventListener('resize', sync);
-})();
-</script>
+    <!-- Contact -->
+    <section id="contact" class="scene contact" data-shape="galaxy" data-side="0">
+      <div class="wrap">
+        <div class="intro reveal">
+          <p class="kicker" data-i18n="ct.k">Contact</p>
+          <h2 class="title title-xl" data-i18n="ct.t">Vous évaluez <em>une stack IA ?</em></h2>
+          <p class="lede center" data-i18n="ct.p">Contactez-moi et parlons du périmètre. Je réponds sur LinkedIn ou par e-mail.</p>
+          <div class="hero-cta center">
+            <a class="btn btn-primary magnetic" href="https://www.linkedin.com/in/paulasquin" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 448 512" aria-hidden="true"><path d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-12.4-58.4-43.4-58.4-23.7 0-37.8 15.9-44 31.3-2.3 5.5-2.9 13.2-2.9 20.9V448h-92.8s1.2-241.1 0-266.1h92.8v37.7c12.3-19 34.4-46.1 83.7-46.1 61.1 0 106.9 39.9 106.9 125.7V448z"/></svg><span data-i18n="ct.cta">M'écrire sur LinkedIn</span></a>
+            <a class="btn btn-ghost magnetic" href="mailto:contact@aidiligence.eu">contact@aidiligence.eu</a>
+          </div>
+        </div>
+      </div>
+      <footer class="footer">
+        <span>© AI Diligence — <span data-i18n="ft.tag">Due diligence en intelligence artificielle</span></span>
+        <span><a href="https://paulasquin.com" target="_blank" rel="noopener">paulasquin.com</a> · <a href="https://www.linkedin.com/in/paulasquin" target="_blank" rel="noopener noreferrer">LinkedIn</a> · <a href="mailto:contact@aidiligence.eu">contact@aidiligence.eu</a> · <a href="legal/" data-i18n="ft.legal">Mentions légales</a></span>
+      </footer>
+    </section>
+  </main>
+
+  <script src="assets/vendor/gsap.min.js"></script>
+  <script src="assets/vendor/ScrollTrigger.min.js"></script>
+  <script src="assets/vendor/lenis.min.js"></script>
+  <script type="module" src="assets/js/main.js"></script>
 </body>
 </html>
