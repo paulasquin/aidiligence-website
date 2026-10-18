@@ -81,6 +81,31 @@ LANG_SCRIPT = """<script>
     })();
   </script>"""
 
+# Brand intro, once per session: the wheel rolls in and reveals the name. Not
+# for a visitor coming back from the language switch, following an anchor, or
+# asking for reduced motion; the stylesheet hides it after 7 s whatever happens.
+INTRO_SCRIPT = """<script>
+    (function () {
+      try {
+        if (sessionStorage.getItem('intro') || sessionStorage.getItem('scrollY') || location.hash
+            || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        document.documentElement.classList.add('intro');
+      } catch (e) {}
+    })();
+  </script>"""
+
+
+def intro_overlay():
+    with open(os.path.join(ROOT, "tools/intro-wheel.svg"), encoding="utf-8") as f:
+        wheel = f.read().strip()  # written by tools/logo.py
+    return f"""<div class="intro-overlay" aria-hidden="true">
+    <div class="intro-lockup">
+      {wheel}
+      <div class="intro-text"><b>AI</b> <span>Diligence</span></div>
+    </div>
+  </div>"""
+
+
 FONTS = ('<link rel="preload" as="font" type="font/woff2" href="assets/fonts/unbounded-latin.woff2" crossorigin>\n'
          '  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-latin.woff2" crossorigin>')
 
@@ -382,7 +407,9 @@ def page_home():
   <meta property="og:image" content="{URL}assets/og.jpg">
   <meta name="twitter:card" content="summary_large_image">
   {LANG_SCRIPT}
-  <link rel="icon" type="image/png" href="assets/img/ai-diligence-logo.png">
+  {INTRO_SCRIPT}
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+  <link rel="apple-touch-icon" href="assets/img/icon-256.png">
   {FONTS}
   <link href="assets/css/style.css" rel="stylesheet">
   <script type="importmap">
@@ -394,12 +421,13 @@ def page_home():
   </script>
 </head>
 <body class="is-loading">
+  {intro_overlay()}
   <canvas id="field" class="field" aria-hidden="true"></canvas>
   <div class="veil" aria-hidden="true"></div>
   <div class="scroll-progress" aria-hidden="true"><span></span></div>
 
   <nav class="topnav" aria-label="{tr("nav.aria", "Navigation principale", "Main navigation")}" data-i18n-aria="nav.aria">
-    <a href="#top" class="brand"><span class="brand-mark" aria-hidden="true"></span>AI Diligence</a>
+    <a href="#top" class="brand"><img class="brand-mark" src="assets/img/mark.svg" alt="" width="28" height="28">AI Diligence</a>
     <div class="nav-links">
       {t("a", "nav.approach", "Approche", "Approach", ' href="#approach"')}
       <a href="#due-diligence">Due diligence</a>
@@ -443,12 +471,12 @@ def subpage(p, title, desc, body, robots=""):
   <title>{html.escape(title)}</title>
   <meta name="description" content="{html.escape(desc)}">{robots}
   <meta name="theme-color" content="#04050c">
-  <link rel="icon" type="image/png" href="{p}assets/img/ai-diligence-logo.png">
+  <link rel="icon" type="image/svg+xml" href="{p}assets/img/favicon.svg">
   <link href="{p}assets/css/style.css" rel="stylesheet">
 </head>
 <body class="subpage">
   <nav class="topnav scrolled">
-    <a href="{p or './'}" class="brand"><span class="brand-mark" aria-hidden="true"></span>AI Diligence</a>
+    <a href="{p or './'}" class="brand"><img class="brand-mark" src="{p}assets/img/mark.svg" alt="" width="28" height="28">AI Diligence</a>
   </nav>
   <main>
 {body}

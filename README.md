@@ -44,17 +44,47 @@ Then <http://127.0.0.1:8767/> — `?lang=en` / `?lang=fr` force a language, `?de
 ## Structure
 
 - `assets/css/style.css` — styles (shared conventions with paulasquin.com).
-- `assets/js/main.js` — smooth scroll, reveals, nav, pointer effects, boot.
+- `assets/js/main.js` — brand intro, smooth scroll, reveals, nav, pointer effects, boot.
 - `assets/js/i18n.js` — language handling (from `paulasquin/showcase-kit`). The inline script
   in `<head>` picks the language before first paint: `?lang=`, then the visitor's saved
   choice, then the browser languages; English is applied from `strings.js` at boot.
 - `assets/js/field.js` — the particle field, adapted from paulasquin.com. Each section names
   a shape (`data-shape`) and the side of the screen it sits on (`data-side`: -1, 0, 1).
-  Shapes: `mark` (the AI Diligence logo, sampled at runtime from
-  `assets/img/ai-diligence-mark.png`), `galaxy`, `stack` (four layers of an AI stack scanned
+  Shapes: `mark` (the AI Diligence logo, drawn with the proportions of `tools/logo.py`,
+  a pulse running from the hub out along the spokes), `galaxy`, `stack` (four layers of an AI stack scanned
   from bottom to top), `net` (neural network with a forward pass), `orb`. Every shape must
   fill exactly `n` particles.
 - `assets/og.jpg` — capture of the hero at 1200×630, used for link previews.
+
+## Logo
+
+Half a stagecoach wheel standing on its axle, which draws the D of Diligence: the axle is
+the stem, the hub sits on it with its cap, five tapered spokes reach a wooden felloe bolted to
+its iron tire — the stagecoach of the name, and an analysis that starts from one point and
+covers the whole picture. The hub, the double rim and the bolts are what keep it a wheel
+(a first version with four thick spokes read as a lemon slice).
+
+```bash
+uv run -q --with fonttools --with brotli --with playwright python tools/logo.py
+```
+
+writes `brand/` — mark and lockup as SVG and PNG, for dark (`-dark-bg`) and light
+(`-light-bg`) backgrounds, and `aidiligence-linkedin-logo.png` (1200×1200, the mark on the
+site's dark background) — plus the site icons `assets/img/mark.svg`, `favicon.svg` (follows
+the browser theme) and `icon-256.png`. The lockup's text is outlined from Unbounded, so the
+SVGs need no font. Colours: `#6fd6ff` → `#8b7bff` gradient, ink `#eceaf6` on dark,
+`#14162b` on light.
+
+### Intro
+
+On a visitor's first page of the session, the whole wheel rolls in from the right edge of the
+screen without slipping (whole turns, so it stops as drawn), the name appears behind it, then
+its back half fades and the axle grows from the hub: the logo, which then gives way to the
+hero. A click, a key or a scroll speeds it up; it is skipped after the language switch, on a
+link to an anchor and with `prefers-reduced-motion`, and the stylesheet hides it after 7 s if
+the script fails. The wheel (`tools/intro-wheel.svg`) is written by `tools/logo.py` and
+inlined by `tools/build.py`; the timeline is `brandIntro()` in `assets/js/main.js`. To see it
+again: `sessionStorage.removeItem('intro')`, then reload.
 
 ## Deployment
 

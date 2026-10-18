@@ -36,10 +36,9 @@ function webglOK() {
 
 async function setupField() {
   if (!webglOK()) { document.documentElement.classList.add('no-webgl'); return; }
-  const { Field, markPoints } = await import('./field.js');
-  const pts = await markPoints('assets/img/ai-diligence-mark.png').catch(() => null);
+  const { Field } = await import('./field.js');
   const small = innerWidth < 860 || (navigator.hardwareConcurrency || 8) <= 4;
-  const field = new Field($('#field'), { count: small ? 9000 : 22000, reduced, markPoints: pts });
+  const field = new Field($('#field'), { count: small ? 9000 : 22000, reduced });
   if (location.search.includes('debug')) window.__field = field;
   let vel = 0;
   lenis?.on('scroll', (l) => { vel = l.velocity; });
@@ -48,6 +47,46 @@ async function setupField() {
     trigger: sec, start: 'top 55%', end: 'bottom 55%',
     onToggle: (self) => self.isActive && field.morphTo(sec.dataset.shape, Number(sec.dataset.side)),
   }));
+}
+
+/* ---------------- brand intro ---------------- */
+// The whole wheel rolls in from the right edge without slipping (whole turns, so it
+// stops as drawn), the name appears behind it, then its back half fades and
+// the axle grows from the hub: the logo. Any input speeds it up.
+async function brandIntro() {
+  const root = document.documentElement;
+  if (!root.classList.contains('intro')) return;
+  try { sessionStorage.setItem('intro', '1'); } catch (e) { /* private mode */ }
+  const ov = $('.intro-overlay'), wheel = $('.intro-wheel'), text = $('.intro-text');
+  const roll = $('.iw-roll', wheel), back = $('.iw-back', wheel), axle = $('.iw-axle', wheel);
+  await document.fonts.ready;
+  const w = wheel.getBoundingClientRect(), t = text.getBoundingClientRect();
+  const R = (w.width / 2) * (48.25 / 49.25); // the tire's outer radius
+  const cx = w.left + w.width / 2;
+  const turns = Math.max(1, Math.ceil((Math.max(innerWidth, t.right + R) - cx + R) / (2 * Math.PI * R))); // in from the screen edge
+  const reveal = () => {
+    const hidden = Math.min(t.width, Math.max(0, cx + gsap.getProperty(wheel, 'x') + R - t.left)); // behind the rim
+    text.style.clipPath = `inset(-20% 0 -20% ${hidden}px)`;
+  };
+  gsap.set(wheel, { x: 2 * Math.PI * R * turns, visibility: 'visible' });
+  gsap.set(roll, { svgOrigin: '0 0', rotation: 0 });
+  gsap.set(axle, { svgOrigin: '0 0', scaleY: 0 });
+  reveal();
+  await new Promise((resolve) => {
+    const tl = gsap.timeline({ onComplete: resolve });
+    tl.fromTo(wheel, { opacity: 0 }, { opacity: 1, duration: 0.35 }, 0)
+      .to(wheel, { x: 0, duration: 2.4, ease: 'power2.out', onUpdate: reveal }, 0)
+      .to(roll, { rotation: -360 * turns, duration: 2.4, ease: 'power2.out' }, 0)
+      .to(roll, { rotation: -360 * turns + 6, duration: 0.16, ease: 'power1.out' })
+      .to(roll, { rotation: -360 * turns, duration: 0.6, ease: 'elastic.out(1, 0.45)' })
+      .to(back, { opacity: 0, duration: 0.5, ease: 'power2.out' }, '-=0.55')
+      .to(axle, { scaleY: 1, duration: 0.65, ease: 'back.out(2)' }, '<')
+      .to(ov, { opacity: 0, duration: 0.7, ease: 'power2.inOut' }, '+=0.45');
+    const skip = () => tl.timeScale(6);
+    ['pointerdown', 'keydown', 'wheel', 'touchstart'].forEach((e) => addEventListener(e, skip, { once: true, passive: true }));
+  });
+  root.classList.remove('intro');
+  ov.remove();
 }
 
 /* ---------------- hero intro ---------------- */
@@ -129,8 +168,8 @@ function pointerFx() {
 chrome();
 pointerFx();
 reveals();
-heroIntro();
 setupField();
+brandIntro().finally(heroIntro);
 
 let y = null;
 try { y = sessionStorage.getItem('scrollY'); sessionStorage.removeItem('scrollY'); } catch (e) { /* private mode */ }

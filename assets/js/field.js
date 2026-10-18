@@ -2,10 +2,10 @@
 // Every section names a shape (data-shape); the particles fly from the current
 // shape to the next one. Each particle carries a "kind" (integer part of w) and
 // a parameter (fraction of w) that the vertex shader animates: network forward
-// pass, orbits, and a scan sweeping upwards through the AI mark and the stack.
+// pass, orbits, a scan sweeping up the stack, a pulse running out from the hub.
 import * as THREE from 'three';
 
-const K = { STILL: 0, EDGE: 1, NODE: 2, ORBIT: 3, SWEEP: 4 };
+const K = { STILL: 0, EDGE: 1, NODE: 2, ORBIT: 3, SWEEP: 4, RADIAL: 5 };
 
 /* ---------------- shapes ---------------- */
 
@@ -91,23 +91,52 @@ function net(n) {
   return s;
 }
 
-// The AI Diligence mark (circuit brain), from points sampled out of the logo
-// image, bent on a shallow shell, in a slowly turning cloud of dust.
-function mark(n, pts) {
-  if (!pts?.length) return orb(n);
+// The AI Diligence mark: half a stagecoach wheel on its axle, the D of
+// Diligence (same proportions as tools/logo.py): hub and cap, five tapered
+// spokes, felloe and iron tire. The parameter of every particle is its
+// distance from the hub, so a pulse runs out along the spokes.
+function mark(n) {
   const s = new Shape(n), r = rng(7);
-  const cyan = C('#6fd6ff'), violet = C('#8b7bff'), white = C('#f4f0ff');
-  const nMark = Math.floor(n * 0.78);
-  for (let i = 0; i < nMark; i++) {
-    const [px, py] = pts[Math.floor(r() * pts.length)];
-    const x = px + (r() - 0.5) * 0.018, y = py + (r() - 0.5) * 0.018;
-    const z = -0.35 * x * x + (r() - 0.5) * 0.06;
-    const c = lerpC(cyan, violet, (x + 1.45) / 2.9);
-    s.push(x, y, z, K.SWEEP, r(), (r() < 0.08 ? white : c).clone().multiplyScalar(0.45 + r() * 0.55));
+  const cyan = C('#6fd6ff'), violet = C('#8b7bff'), ink = C('#efeaff');
+  const k = 2.9 / 96.5, R = 46 * k, hx = -17.6 * k;
+  const tire = 4.5 * k, felloe = 7 * k, rf = R - (4.5 / 2 + 3 + 7 / 2) * k;
+  const axle = 10 * k, hubR = 13 * k, hole = 8.5 * k, cap = 4.5 * k;
+  const rim = (y) => lerpC(cyan, violet, (1 - y / R) / 2);
+  const jit = (a) => (r() - 0.5) * a;
+  const counts = { tire: 0.13, felloe: 0.2, spoke: 0.22, axle: 0.14, hub: 0.08, cap: 0.03 };
+  const N = Object.fromEntries(Object.entries(counts).map(([key, f]) => [key, Math.floor(n * f)]));
+  const band = (count, rad, width, k0) => {
+    for (let i = 0; i < count; i++) {
+      const a = (r() - 0.5) * Math.PI, rr = rad + jit(width);
+      const y = Math.sin(a) * rr;
+      s.push(hx + Math.cos(a) * rr, y, jit(width), K.RADIAL, Math.min(rr / R, 0.999), rim(y).multiplyScalar(k0 + r() * 0.45));
+    }
+  };
+  band(N.tire, R, tire, 0.55);
+  band(N.felloe, rf, felloe, 0.4);
+  const angles = [1, 2, 3, 4, 5].map((i) => ((-90 + 30 * i) * Math.PI) / 180);
+  const r1 = rf - felloe / 2;
+  for (let i = 0; i < N.spoke; i++) {
+    const a = angles[Math.floor(r() * angles.length)], rr = hubR + r() * (r1 - hubR), u = (rr - hubR) / (r1 - hubR);
+    const c = Math.cos(a), sn = Math.sin(a), o = jit((6 - 2.4 * u) * k);
+    const y = sn * rr + c * o;
+    s.push(hx + c * rr - sn * o, y, jit(4 * k), K.RADIAL, rr / R, rim(y).multiplyScalar(0.55 + r() * 0.45));
+  }
+  for (let i = 0; i < N.axle; i++) {
+    const y = (r() < 0.5 ? -1 : 1) * (hubR + r() * (R - hubR + axle / 2));
+    s.push(hx + jit(axle), y, jit(axle * 0.8), K.RADIAL, Math.abs(y) / R, ink.clone().multiplyScalar(0.6 + r() * 0.4));
+  }
+  for (let i = 0; i < N.hub; i++) {
+    const a = r() * Math.PI * 2, rr = hole + r() * (hubR - hole);
+    s.push(hx + Math.cos(a) * rr, Math.sin(a) * rr, jit(axle * 0.8), K.RADIAL, rr / R, ink.clone().multiplyScalar(0.75 + r() * 0.25));
+  }
+  for (let i = 0; i < N.cap; i++) {
+    const a = r() * Math.PI * 2, rr = Math.sqrt(r()) * cap;
+    s.push(hx + Math.cos(a) * rr, Math.sin(a) * rr, jit(axle * 0.8), K.RADIAL, 0, ink.clone().multiplyScalar(0.8 + r() * 0.2));
   }
   while (!s.full) {
-    const u = r() * 2 - 1, a = r() * Math.PI * 2, R = 1.85 + Math.pow(r(), 1.5) * 0.9, q = Math.sqrt(1 - u * u);
-    s.push(Math.cos(a) * q * R, u * R * 0.85, Math.sin(a) * q * R, K.ORBIT, r(), lerpC(violet, cyan, r()).multiplyScalar(0.12 + r() * 0.35));
+    const u = r() * 2 - 1, a = r() * Math.PI * 2, rr = 1.85 + Math.pow(r(), 1.5) * 0.9, q = Math.sqrt(1 - u * u);
+    s.push(Math.cos(a) * q * rr, u * rr * 0.85, Math.sin(a) * q * rr, K.ORBIT, r(), lerpC(violet, cyan, r()).multiplyScalar(0.12 + r() * 0.35));
   }
   return s;
 }
@@ -162,7 +191,7 @@ const VIEW = {
   orb: { rx: 0.32, ry: 0, rz: -0.38, scale: 1 },
   galaxy: { rx: 1.05, ry: 0, rz: 0.22, scale: 1 },
   net: { rx: 0.05, ry: -0.42, rz: 0, scale: 0.8, sway: 0.18 },
-  mark: { rx: 0.04, ry: -0.18, rz: 0, scale: 1.05, sway: 0.22 },
+  mark: { rx: 0.04, ry: -0.2, rz: 0, scale: 1.05, sway: 0.28 },
   stack: { rx: 0.5, ry: 0.62, rz: 0, scale: 0.74, sway: 0.3 },
 };
 
@@ -197,6 +226,10 @@ const vert = /* glsl */ `
       float Y = mod(uTime * 0.75, 4.4) - 2.2;
       float w = exp(-pow((q.y - Y) * 3.5, 2.0));
       boost = 0.8 + w * 2.4 + 0.15 * sin(uTime * 2.0 + prm * 6.28);
+    } else if (kind == 5.0) {     // pulse: from the hub out to the rim (prm = distance)
+      float P = mod(uTime * 0.5, 1.7) - 0.25;
+      float w = exp(-pow((prm - P) * 7.0, 2.0));
+      boost = 0.85 + w * 2.2;
     }
     return q;
   }
@@ -242,7 +275,7 @@ const frag = /* glsl */ `
 /* ---------------- field ---------------- */
 
 export class Field {
-  constructor(canvas, { count, reduced, markPoints, start = 'mark' }) {
+  constructor(canvas, { count, reduced, start = 'mark' }) {
     this.reduced = reduced;
     this.renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: true, powerPreference: 'high-performance' });
     this.dpr = Math.min(devicePixelRatio || 1, 1.75);
@@ -253,7 +286,7 @@ export class Field {
 
     this.n = count;
     this.shapes = {};
-    for (const [k, fn] of Object.entries(BUILDERS)) this.shapes[k] = fn(count, markPoints);
+    for (const [k, fn] of Object.entries(BUILDERS)) this.shapes[k] = fn(count);
 
     const g = new THREE.BufferGeometry();
     const rand = new Float32Array(count * 4), r = rng(99);
@@ -387,20 +420,4 @@ export class Field {
     this.camera.lookAt(0, 0, 0);
     this.renderer.render(this.scene, this.camera);
   }
-}
-
-/** Points of the logo's opaque pixels, centred, 2.9 units tall. */
-export async function markPoints(src) {
-  const img = new Image();
-  img.src = src;
-  await img.decode();
-  const w = img.naturalWidth, h = img.naturalHeight, cv = document.createElement('canvas');
-  cv.width = w; cv.height = h;
-  const ctx = cv.getContext('2d');
-  ctx.drawImage(img, 0, 0);
-  const data = ctx.getImageData(0, 0, w, h).data, k = 2.9 / h, pts = [];
-  for (let y = 0; y < h; y++) {
-    for (let x = 0; x < w; x++) if (data[(y * w + x) * 4 + 3] > 128) pts.push([(x - w / 2) * k, (h / 2 - y) * k]);
-  }
-  return pts;
 }
