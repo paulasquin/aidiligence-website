@@ -349,7 +349,7 @@ def body_home():
     <section id="about" class="scene" data-shape="orb" data-side="1">
       <div class="wrap">
         <div class="card about reveal">
-          <img class="portrait" src="assets/img/paul-asquin.jpg" alt="Paul Asquin" loading="lazy" width="601" height="800">
+          <img class="portrait" src="assets/img/paul-asquin.jpg" alt="Paul Asquin" loading="lazy" width="720" height="960">
           <div>
             {t("p", "ab.k", "À propos · Fondateur", "About · Founder", ' class="kicker"')}
             <h2 class="title">Paul <em>Asquin</em></h2>
