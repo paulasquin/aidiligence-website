@@ -50,18 +50,14 @@ LINKEDIN_SVG = (
 )
 
 # Line-art icons, drawn with primitives so they stay crisp at any size.
-ICON_BULB = ('<svg viewBox="0 0 24 24" aria-hidden="true">'
-             '<circle cx="12" cy="9.8" r="4.6"/>'
-             '<path d="M9.7 16.9h4.6M10.5 19.8h3"/></svg>')
 ICON_SEARCH = ('<svg viewBox="0 0 24 24" aria-hidden="true">'
                '<circle cx="10.4" cy="10.4" r="6"/>'
                '<path d="M14.9 14.9L20 20"/></svg>')
-ICON_CHECK = ('<svg viewBox="0 0 24 24" aria-hidden="true">'
-              '<circle cx="12" cy="12" r="8.6"/>'
-              '<path d="M8.1 12.4l2.8 2.8 5.1-5.6"/></svg>')
-ICON_CHART = ('<svg viewBox="0 0 24 24" aria-hidden="true">'
-              '<path d="M4 19.6h16" stroke-width="1.9"/>'
-              '<path d="M7.6 19.6V13M12 19.6V8.4M16.4 19.6V11.2" stroke-width="2.6"/></svg>')
+ICON_COMPASS = ('<svg viewBox="0 0 24 24" aria-hidden="true">'
+                '<circle cx="12" cy="12" r="8.6"/>'
+                '<path d="M14.9 9.1l-1.6 4.2-4.2 1.6 1.6-4.2z"/></svg>')
+ICON_CODE = ('<svg viewBox="0 0 24 24" aria-hidden="true">'
+             '<path d="M8.6 7.4L4 12l4.6 4.6M15.4 7.4L20 12l-4.6 4.6M13.4 5.6l-2.8 12.8"/></svg>')
 
 # Language picked before first paint: ?lang=, then the visitor's saved choice,
 # then the browser languages (same script as paulasquin.com).
@@ -129,44 +125,130 @@ def t(tag, key, fr, en, attrs=""):
 # Content (French, English)
 # --------------------------------------------------------------------------- #
 
-META_TITLE = ("AI Diligence — Due diligence en intelligence artificielle",
-              "AI Diligence — Artificial Intelligence Due Diligence")
-META_DESC = ("Due diligence IA : une évaluation technique complète de la stack IA d'une entreprise — "
-             "viabilité du produit, intégrité des modèles, coûts d'exploitation, licences et passage "
-             "à l'échelle.",
-             "AI due diligence: a comprehensive technical evaluation of a company's AI stack — "
-             "product viability, model integrity, running costs, licensing and scalability.")
+META_TITLE = ("AI Diligence — Conduite et audit de projets d'IA",
+              "AI Diligence — AI project leadership and due diligence")
+META_DESC = ("AI Diligence conduit, construit et audite des projets d'intelligence artificielle : "
+             "conduite de projets IA, ingénierie IA et MLOps, due diligence de stack IA.",
+             "AI Diligence leads, builds and audits artificial intelligence projects: AI project "
+             "leadership, AI and MLOps engineering, AI stack due diligence.")
 
+# The name says both trades: due diligence, and the stagecoach — the diligence,
+# driven from departure to arrival.
 SERVICE_LINES = [
-    ("Ingénierie IA &amp; MLOps", "AI &amp; MLOps Engineering"),
-    ("Audit de stack IA (due diligence)", "AI Stack Due Diligence Audit"),
-    ("Pilotage d'équipes et de projets IA", "AI Team &amp; Project Management"),
+    ("Conduite de projets IA", "AI project leadership"),
+    ("Ingénierie IA &amp; MLOps", "AI &amp; MLOps engineering"),
+    ("Due diligence IA", "AI due diligence"),
 ]
 
-PILLARS = [
-    ("#6fd6ff", ICON_BULB, ("L'IA dans l'innovation", "AI in Innovation"),
-     ("Les technologies d'IA sont devenues un atout majeur des entreprises innovantes, en "
-      "particulier dans une perspective d'investissement. La multiplication des acteurs interroge "
-      "leur différenciation et leur compétitivité.",
-      "AI technologies have become a main asset for innovative companies, especially when "
-      "considering investments. The multiplication of actors raises questions on their "
-      "differentiation and competitiveness.")),
-    ("#4fe0c0", ICON_SEARCH, ("Due diligence technique", "Technical Due Diligence"),
+# Facts (roles, dates, team sizes, missions) come from paulasquin.com, where the
+# full career is told; this site only points to it.
+SERVICES = [
+    ("lead", "#6fd6ff", ICON_COMPASS, ("Conduite de projets IA", "AI project leadership"),
+     ("Faire aboutir un projet d'IA, du cadrage à la mise en production : choix des modèles et de "
+      "l'architecture, constitution et encadrement de l'équipe, priorités alignées sur les besoins "
+      "du métier.",
+      "Taking an AI project from framing to production: choice of models and architecture, building "
+      "and leading the team, priorities aligned with business needs."),
+     [("Head of AI ou Lead AI à temps partagé", "Fractional Head of AI or Lead AI"),
+      ("Cadrage, faisabilité et budget", "Framing, feasibility and budget"),
+      ("Recrutement et montée en compétence de l'équipe", "Hiring and upskilling the team"),
+      ("Feuille de route et suivi de la livraison", "Roadmap and delivery follow-up")],
+     ("Head of AI chez AIVE, Acolad et Ocus, avec des équipes jusqu'à 7 ingénieurs et docteurs.",
+      "Head of AI at AIVE, Acolad and Ocus, with teams of up to 7 engineers and PhDs.")),
+    ("build", "#4fe0c0", ICON_CODE, ("Ingénierie IA &amp; MLOps", "AI &amp; MLOps engineering"),
+     ("Concevoir, entraîner et mettre en production des systèmes d'IA, puis les faire vivre : "
+      "qualité, coûts et performances suivis dans la durée.",
+      "Designing, training and taking AI systems to production, then keeping them running: quality, "
+      "costs and performance monitored over time."),
+     [("Vision : CNN, vision transformers, estimation de pose", "Vision: CNNs, vision transformers, pose estimation"),
+      ("Langage : LLM, RAG, agents, appels de fonctions", "Language: LLMs, RAG, agents, function calling"),
+      ("IA embarquée, sans envoi dans le cloud", "Embedded AI, with nothing sent to the cloud"),
+      ("AWS, Azure, GCP, Scaleway, Modal, Kubernetes", "AWS, Azure, GCP, Scaleway, Modal, Kubernetes")],
+     ("Agents RAG pour Bivwak!, plateforme médicale Alveo, caméra embarquée de Guardia.",
+      "RAG agents for Bivwak!, the Alveo medical platform, Guardia's embedded camera.")),
+    ("audit", "#a78bff", ICON_SEARCH, ("Due diligence IA", "AI due diligence"),
      ("Nos services de due diligence IA offrent une évaluation complète des fondations "
       "technologiques d'une entreprise, en complément de la due diligence traditionnelle.",
       "Our AI due diligence services provide a comprehensive evaluation of a company's "
-      "technological foundation, enhancing traditional due diligence efforts.")),
-    ("#ffb37a", ICON_CHECK, ("Expertise IA", "AI Expertise"),
-     ("Nous veillons à ce que votre investissement ne repose pas seulement sur un potentiel, mais "
-      "sur une infrastructure technologique robuste. Nous formulons des recommandations "
-      "technologiques précises.",
-      "We ensure your investment is not only based on potential but grounded in a robust "
-      "technological infrastructure. We provide precise technology recommendations.")),
-    ("#a78bff", ICON_CHART, ("Éclairages", "Insights"),
-     ("Nos services vous apportent des éclairages concrets, pour des investissements et des choix "
-      "technologiques alignés sur les standards actuels du secteur et ses évolutions à venir.",
-      "Our services empower you with actionable insights, ensuring investments and technological "
-      "choices are aligned with current industry standards and future advancements.")),
+      "technological foundation, enhancing traditional due diligence efforts."),
+     [("Avant un investissement, une acquisition ou un choix stratégique",
+       "Before an investment, an acquisition or a strategic choice"),
+      ("Huit axes, du produit aux coûts et aux licences", "Eight focus areas, from product to costs and licensing"),
+      ("Des recommandations techniques précises", "Precise technology recommendations")],
+     ("Audit de la stack technique de Bivwak!, l'incubateur de start-up de BNP Paribas.",
+      "Audit of the tech stack of Bivwak!, BNP Paribas' startup incubator.")),
+]
+
+STEPS = [
+    (("Cadrer", "Frame"),
+     ("Le besoin, les données disponibles, la faisabilité, le budget et les critères de réussite.",
+      "The need, the data at hand, feasibility, budget and success criteria.")),
+    (("Évaluer", "Assess"),
+     ("L'existant et l'état de l'art : audit de la stack, comparaison de modèles, choix "
+      "d'architecture.",
+      "What exists and the state of the art: stack audit, model comparison, architecture choices.")),
+    (("Construire", "Build"),
+     ("Un prototype, puis les modèles, les pipelines et l'intégration au produit, par itérations "
+      "courtes.",
+      "A prototype, then the models, the pipelines and the product integration, in short "
+      "iterations.")),
+    (("Livrer et transmettre", "Ship and hand over"),
+     ("La mise en production, le suivi des coûts et des performances, la formation des équipes.",
+      "Production deployment, cost and performance monitoring, team training.")),
+]
+
+MISSIONS = [
+    ("Bivwak!", ("Lead AI · 2025–2026", "Lead AI · 2025–2026"),
+     ("Incubateur de start-up de BNP Paribas", "BNP Paribas' startup incubator"),
+     ("un agent IA <em>sous haute sécurité</em>", "an AI agent <em>under strict security</em>"),
+     ("Audit de la stack technique, puis conception et développement d'une IA agentique fondée sur "
+      "du RAG et des appels de fonctions, sous de fortes contraintes de sécurité. Elle ingère des "
+      "PDF, des présentations, des pages web et des podcasts ; les profils juniors ont été formés.",
+      "An audit of the tech stack, then the design and development of an agentic AI based on RAG "
+      "and function calling, under strict security constraints. It ingests PDFs, slide decks, web "
+      "pages and podcasts; the junior staff were trained."),
+     [("Agents", "Agents"), ("RAG", "RAG"), ("Appel de fonctions", "Function calling"),
+      ("LangChain", "LangChain"), ("AWS", "AWS")], "bivwak"),
+    ("Alveo", ("Lead AI · 2025–2026", "Lead AI · 2025–2026"),
+     ("Logiciel médical · réanimation", "Medical software · intensive care"),
+     ("analyser <em>la ventilation pulmonaire</em>", "analysing <em>lung ventilation</em>"),
+     ("Une plateforme web qui analyse les enregistrements de tomographie par impédance électrique "
+      "(EIT) des patients en réanimation : lecture des fichiers Dräger et SenTec, reconstruction "
+      "des images de ventilation, calcul de la surdistension et du collapsus pour déterminer la PEP "
+      "optimale.",
+      "A web platform that analyses electrical impedance tomography (EIT) recordings of "
+      "intensive-care patients: reading Dräger and SenTec files, reconstructing ventilation "
+      "images, computing overdistension and collapse to find the optimal PEEP."),
+     [("Reconstruction d'images EIT", "EIT image reconstruction"),
+      ("Interface web · CLI · API Python", "Web interface · CLI · Python API")], "alveo"),
+]
+
+EXPERIENCE = [  # company, role (fr, en), years, what (fr, en), anchor on paulasquin.com
+    ("Ocus", ("Head of AI", "Head of AI"), "2025",
+     ("l'image retravaillée par l'IA", "images reworked by AI"), "ocus"),
+    ("Acolad", ("Head of AI", "Head of AI"), "2024",
+     ("l'IA au service des langues", "AI for languages"), "acolad"),
+    ("AIVE", ("Head of AI", "Head of AI"), "2022–2024",
+     ("le montage vidéo par l'IA", "AI-powered video editing"), "aive"),
+    ("Baracoda", ("Data scientist senior en vision · Lead MLOps", "Senior computer vision data scientist · MLOps lead"),
+     "2021–2022", ("analyser la peau", "analysing skin"), "baracoda"),
+    ("Guardia", ("Cofondateur &amp; CTO", "Co-founder &amp; CTO"), "2020–2023",
+     ("protéger les enfants au bord de la piscine", "protecting children around the pool"), "guardia"),
+    ("Meero", ("Data scientist en vision par ordinateur", "Computer vision data scientist"), "2019–2021",
+     ("sublimer les photos", "enhancing photos"), "meero"),
+]
+
+PRODUCTS = [
+    ("Revela", "https://revela.aidiligence.eu", "revela.png",
+     ("Retoucher ses photos sur Android avec les réglages de Lightroom : mêmes curseurs, rendu "
+      "proche, préréglages .xmp. Tout est traité sur le téléphone.",
+      "Edit photos on Android with Lightroom's adjustments: the same sliders, a close rendering, "
+      ".xmp presets. Everything is processed on the phone.")),
+    ("Siflo", "https://siflo.aidiligence.eu", "siflo.png",
+     ("Transmettre les signaux de sifflet et les messages d'un groupe, de téléphone à téléphone, "
+      "même sans réseau, en canyon, en escalade ou en spéléo.",
+      "Pass whistle signals and messages within a group, from phone to phone, even without a "
+      "network, when canyoning, climbing or caving.")),
 ]
 
 FOCUS_AREAS = [
@@ -224,23 +306,27 @@ CAPABILITIES = [
 ]
 
 FOUNDER_BIO = [
-    ("Fort d'une expérience de Head of AI en vision et en traitement du langage, de CTO de Guardia "
-     "et de freelance en IA, je suis diplômé de Centrale Paris et titulaire de deux MSc : l'un en "
-     "intelligence artificielle et informatique, l'autre en robotique.",
-     "Experienced as Head of AI in vision and language processing, CTO of Guardia and AI "
-     "freelancer, I graduated from Centrale Paris and hold two MScs: one in AI and computer "
-     "science, the other in robotics."),
-    ("J'ai créé AI Diligence en 2023 pour mettre à disposition mon expertise et mon réseau.",
-     "I created AI Diligence in 2023 to offer my expertise and network."),
+    ("Diplômé de Centrale Paris (MSc en intelligence artificielle et informatique) et de Centrale "
+     "Nantes (MSc en robotique), j'ai été data scientist en vision par ordinateur chez Meero puis "
+     "chez Baracoda, cofondateur et CTO de Guardia, Head of AI chez AIVE, Acolad et Ocus, et Lead AI "
+     "pour Bivwak!",
+     "A graduate of Centrale Paris (MSc in artificial intelligence and computer science) and "
+     "Centrale Nantes (MSc in robotics), I was a computer vision data scientist at Meero, then at "
+     "Baracoda, co-founder and CTO of Guardia, Head of AI at AIVE, Acolad and Ocus, and Lead AI for "
+     "Bivwak!"),
+    ("J'ai créé AI Diligence en 2023 pour mettre cette expérience au service d'autres équipes : "
+     "conduire leurs projets d'IA, les construire avec elles, ou les évaluer avant une décision.",
+     "I created AI Diligence in 2023 to put this experience at the service of other teams: "
+     "leading their AI projects, building them together, or assessing them before a decision."),
 ]
 
+# Same four facts as paulasquin.com's About card.
 FACTS = [
-    ("Centrale Paris", ("ingénieur", "engineer")),
-    ("2 MSc", ("IA &amp; informatique · robotique", "AI &amp; computer science · robotics")),
-    ("Head of AI", ("vision &amp; langage", "vision &amp; language")),
-    ("CTO", None),
+    ("Centrale Paris", ("MSc IA &amp; informatique", "MSc AI &amp; computer science")),
+    ("Centrale Nantes", ("MSc robotique", "MSc robotics")),
+    ("Head of AI", ("AIVE · Acolad · Ocus", "AIVE · Acolad · Ocus")),
+    ("CTO", ("Guardia · 2020–2023", "Guardia · 2020–2023")),
 ]
-
 
 # --------------------------------------------------------------------------- #
 # Fragments
@@ -255,11 +341,44 @@ def body_home():
     lines = "\n".join(
         f'            <li><span class="sl-num">0{i}</span>{t("span", f"hero.l{i}", fr, en)}</li>'
         for i, (fr, en) in enumerate(SERVICE_LINES, 1))
-    pillars = "\n".join(f"""          <div class="tile pillar reveal" style="--accent:{colour}">
+    services = "\n".join(f"""          <article class="tile offer reveal" style="--accent:{colour}">
             <span class="pillar-icon">{icon}</span>
-            {t("h3", f"pl{i}.t", *name)}
-            {t("p", f"pl{i}.p", *text)}
-          </div>""" for i, (colour, icon, name, text) in enumerate(PILLARS, 1))
+            <span class="offer-num">0{i}</span>
+            {t("h3", f"sv.{key}.t", *name)}
+            {t("p", f"sv.{key}.p", *text)}
+            <ul class="offer-list">
+{chr(10).join(f'              {t("li", f"sv.{key}.b{j}", *b)}' for j, b in enumerate(bullets, 1))}
+            </ul>
+            {t("p", f"sv.{key}.proof", *proof, ' class="offer-proof"')}{
+            f'''
+            <a class="offer-link" href="#due-diligence">{t("span", "sv.audit.more", "Les 8 axes d'audit", "The 8 focus areas")} <span class="arrow">→</span></a>''' if key == "audit" else ""}
+          </article>""" for i, (key, colour, icon, name, text, bullets, proof) in enumerate(SERVICES, 1))
+    steps = "\n".join(f"""            <li class="step">
+              <span class="step-num">0{i}</span>
+              {t("h3", f"st{i}.t", *title)}
+              {t("p", f"st{i}.p", *text)}
+            </li>""" for i, (title, text) in enumerate(STEPS, 1))
+    missions = "\n".join(f"""          <article class="tile mission reveal">
+            <p class="mission-tag"><b>{t("span", f"ms{i}.role", *role)}</b>{t("span", f"ms{i}.ctx", *ctx)}</p>
+            <h3><span class="mission-name">{name},</span> {t("span", f"ms{i}.t", *title)}</h3>
+            {t("p", f"ms{i}.p", *text)}
+            <ul class="chips">{"".join(t("li", f"ms{i}.c{j}", *c) for j, c in enumerate(chips, 1))}</ul>
+            <a class="offer-link" href="{HUB}/#{anchor}" target="_blank" rel="noopener">paulasquin.com <span class="arrow">↗</span></a>
+          </article>""" for i, (name, role, ctx, title, text, chips, anchor) in enumerate(MISSIONS, 1))
+    experience = "\n".join(
+        f'            <li><a href="{HUB}/#{anchor}" target="_blank" rel="noopener">'
+        f'<span class="xp-name">{name}</span>{t("span", f"xp{i}.role", *role, " class=\"xp-role\"")}'
+        f'{t("span", f"xp{i}.what", *what, " class=\"xp-what\"")}<span class="xp-year">{years}</span></a></li>'
+        for i, (name, role, years, what, anchor) in enumerate(EXPERIENCE, 1))
+    products = "\n".join(f"""          <a class="tile product reveal" href="{url}" target="_blank" rel="noopener">
+            <img src="assets/img/{img}" alt="" width="64" height="64" loading="lazy">
+            <span class="product-body">
+              {t("span", f"pr{i}.tag", "Application Android", "Android app", ' class="product-tag"')}
+              <span class="product-name">{name}</span>
+              {t("span", f"pr{i}.p", *text, ' class="product-text"')}
+              <span class="product-link">{url.removeprefix("https://")} ↗</span>
+            </span>
+          </a>""" for i, (name, url, img, text) in enumerate(PRODUCTS, 1))
     focus = "\n".join(f"""            <div class="focus-item">
               <span class="fi-num">0{i}</span>
               {t("h3", f"fa{i}.t", *title)}
@@ -271,15 +390,14 @@ def body_home():
                         for i, (fr, en) in enumerate(CAPABILITIES, 1))
     bio = "\n".join(f'            {t("p", f"ab.p{i}", fr, en)}'
                     for i, (fr, en) in enumerate(FOUNDER_BIO, 1))
-    facts = "\n".join(
-        f'              <li><b>{name}</b>{t("span", f"ab.f{i}", *sub) if sub else "<span>Guardia</span>"}</li>'
-        for i, (name, sub) in enumerate(FACTS, 1))
+    facts = "\n".join(f'              <li><b>{name}</b>{t("span", f"ab.f{i}", *sub)}</li>'
+                      for i, (name, sub) in enumerate(FACTS, 1))
 
     return f"""    <!-- Hero -->
     <section id="top" class="scene hero" data-shape="mark" data-side="1">
       <div class="wrap">
         <div class="hero-content">
-          <p class="eyebrow"><span class="pulse-dot"></span>{t("span", "hero.eyebrow", "Due diligence en intelligence artificielle", "Artificial Intelligence Due Diligence")}</p>
+          <p class="eyebrow"><span class="pulse-dot"></span>{t("span", "hero.eyebrow", "Conduite et audit de projets d'IA", "AI project leadership and due diligence")}</p>
           <h1 class="hero-title">
             <span class="ht-line"><span class="ht-word">AI</span></span>
             <span class="ht-line"><span class="ht-word ht-glow">Diligence</span></span>
@@ -287,25 +405,59 @@ def body_home():
           <ul class="service-lines">
 {lines}
           </ul>
-          {t("p", "hero.sub", "Une évaluation technique complète de la stack IA d'une entreprise : viabilité du produit, intégrité des modèles, coûts d'exploitation, licences et passage à l'échelle.", "A comprehensive technical evaluation of a company's AI stack: product viability, model integrity, running costs, licensing and scalability.", ' class="hero-sub"')}
+          {t("p", "hero.sub", "Cadrer, construire, mettre en production, ou évaluer avant d'investir : AI Diligence conduit vos projets d'intelligence artificielle, de la vision par ordinateur aux agents de langage.", "Framing, building, taking to production, or assessing before you invest: AI Diligence leads your artificial intelligence projects, from computer vision to language agents.", ' class="hero-sub"')}
           <div class="hero-cta">
-            {linkedin_button("hero.cta1", "Prendre contact", "Get in touch")}
-            <a href="#due-diligence" class="btn btn-ghost magnetic">{t("span", "hero.cta2", "Les 8 axes d'audit", "The 8 focus areas")}</a>
+            {linkedin_button("hero.cta1", "Parler de votre projet", "Discuss your project")}
+            <a href="#services" class="btn btn-ghost magnetic">{t("span", "hero.cta2", "Nos services", "Our services")}</a>
           </div>
         </div>
       </div>
       <div class="scroll-cue" aria-hidden="true"><span></span>{t("i", "hero.scroll", "Défiler", "Scroll")}</div>
     </section>
 
-    <!-- Approach -->
-    <section id="approach" class="scene scene-short" data-shape="galaxy" data-side="0">
+    <!-- Services -->
+    <section id="services" class="scene scene-short" data-shape="galaxy" data-side="0">
       <div class="wrap">
         <div class="intro reveal">
-          {t("p", "ap.k", "Approche", "Approach", ' class="kicker"')}
-          {t("h2", "ap.t", "Investir dans l'IA, <em>sur des bases solides</em>", "Investing in AI, <em>on solid ground</em>", ' class="title title-xl"')}
+          {t("p", "sv.k", "Services", "Services", ' class="kicker"')}
+          {t("h2", "sv.t", "Conduire, construire, <em>évaluer</em>", "Lead, build, <em>assess</em>", ' class="title title-xl"')}
+          {t("p", "sv.p", "Diligence : le soin de l'audit, et la voiture qu'on mène jusqu'à destination. Trois façons d'intervenir sur un projet d'intelligence artificielle, seules ou combinées.", "Diligence: the care of an audit, and the stagecoach driven all the way to its destination. Three ways to work on an artificial intelligence project, alone or combined.", ' class="lede center"')}
         </div>
-        <div class="tiles pillars">
-{pillars}
+        <div class="tiles offers">
+{services}
+        </div>
+      </div>
+    </section>
+
+    <!-- Method -->
+    <section id="method" class="scene" data-shape="path" data-side="1">
+      <div class="wrap">
+        <div class="card card-wide reveal">
+          {t("p", "st.k", "Méthode · la conduite", "Method · the driving", ' class="kicker"')}
+          {t("h2", "st.t", "Un projet d'IA, <em>conduit de bout en bout</em>", "An AI project, <em>driven end to end</em>", ' class="title"')}
+          {t("p", "st.p", "Comme une diligence : un itinéraire clair, des relais, et quelqu'un aux rênes jusqu'à l'arrivée.", "Like a stagecoach: a clear route, staging posts, and someone at the reins until arrival.", ' class="lede"')}
+          <ol class="steps">
+{steps}
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- References -->
+    <section id="references" class="scene" data-shape="net" data-side="-1">
+      <div class="wrap">
+        <div class="intro reveal">
+          {t("p", "rf.k", "Références", "References", ' class="kicker"')}
+          {t("h2", "rf.t", "Des missions <em>menées de bout en bout</em>", "Missions <em>carried end to end</em>", ' class="title title-xl"')}
+        </div>
+        <div class="tiles missions">
+{missions}
+        </div>
+        <div class="xp reveal">
+          {t("p", "xp.k", "Avant AI Diligence : l'expérience du fondateur", "Before AI Diligence: the founder's experience", ' class="kicker"')}
+          <ul class="xp-list">
+{experience}
+          </ul>
         </div>
       </div>
     </section>
@@ -325,7 +477,7 @@ def body_home():
     </section>
 
     <!-- Expertise -->
-    <section id="expertise" class="scene" data-shape="net" data-side="-1">
+    <section id="expertise" class="scene" data-shape="orb" data-side="-1">
       <div class="wrap wrap-right">
         <div class="card reveal">
           {t("p", "ex.k", "Expertise · améliorer vos projets d'IA", "Expertise · improve your AI projects", ' class="kicker"')}
@@ -345,8 +497,21 @@ def body_home():
       </div>
     </section>
 
+    <!-- Products -->
+    <section id="products" class="scene scene-short" data-shape="galaxy" data-side="0">
+      <div class="wrap">
+        <div class="intro reveal">
+          {t("p", "pr.k", "Produits", "Products", ' class="kicker"')}
+          {t("h2", "pr.t", "Des applications <em>développées en interne</em>", "Apps <em>built in-house</em>", ' class="title"')}
+        </div>
+        <div class="tiles products">
+{products}
+        </div>
+      </div>
+    </section>
+
     <!-- About -->
-    <section id="about" class="scene" data-shape="orb" data-side="1">
+    <section id="about" class="scene" data-shape="mark" data-side="1">
       <div class="wrap">
         <div class="card about reveal">
           <img class="portrait" src="assets/img/paul-asquin.jpg" alt="Paul Asquin" loading="lazy" width="720" height="960">
@@ -357,7 +522,7 @@ def body_home():
             <ul class="facts">
 {facts}
             </ul>
-            <p class="card-cta"><a class="btn btn-ghost magnetic" href="{HUB}" target="_blank" rel="noopener">{t("span", "ab.hub", "Mes projets sur paulasquin.com", "My projects on paulasquin.com")}<span class="arrow">↗</span></a></p>
+            <p class="card-cta"><a class="btn btn-ghost magnetic" href="{HUB}" target="_blank" rel="noopener">{t("span", "ab.hub", "Tout le parcours sur paulasquin.com", "The full story on paulasquin.com")}<span class="arrow">↗</span></a></p>
           </div>
         </div>
       </div>
@@ -368,16 +533,16 @@ def body_home():
       <div class="wrap">
         <div class="intro reveal">
           {t("p", "ct.k", "Contact", "Contact", ' class="kicker"')}
-          {t("h2", "ct.t", "Vous évaluez <em>une stack IA ?</em>", "Assessing <em>an AI stack?</em>", ' class="title title-xl"')}
-          {t("p", "ct.p", "Contactez-moi et parlons du périmètre. Je réponds sur LinkedIn ou par e-mail.", "Reach out and let's talk about the scope. I answer on LinkedIn or by email.", ' class="lede center"')}
+          {t("h2", "ct.t", "Un projet d'IA <em>à conduire ou à évaluer ?</em>", "An AI project <em>to lead or to assess?</em>", ' class="title title-xl"')}
+          {t("p", "ct.p", "Parlons de votre besoin. Réponse sur LinkedIn ou par e-mail.", "Let's talk about your needs. Answers on LinkedIn or by email.", ' class="lede center"')}
           <div class="hero-cta center">
-            {linkedin_button("ct.cta", "M'écrire sur LinkedIn", "Message me on LinkedIn")}
+            {linkedin_button("ct.cta", "Écrire sur LinkedIn", "Write on LinkedIn")}
             <a class="btn btn-ghost magnetic" href="mailto:{EMAIL}">{EMAIL}</a>
           </div>
         </div>
       </div>
       <footer class="footer">
-        <span>© {SITE} — {t("span", "ft.tag", "Due diligence en intelligence artificielle", "Artificial Intelligence Due Diligence")}</span>
+        <span>© {SITE} · Guardia SAS — {t("span", "ft.tag", "Conduite et audit de projets d'IA", "AI project leadership and due diligence")}</span>
         <span><a href="{HUB}" target="_blank" rel="noopener">paulasquin.com</a> · <a href="{LINKEDIN}" target="_blank" rel="noopener noreferrer">LinkedIn</a> · <a href="mailto:{EMAIL}">{EMAIL}</a> · {t("a", "ft.legal", "Mentions légales", "Legal notice", ' href="legal/"')}</span>
       </footer>
     </section>"""
@@ -427,9 +592,10 @@ def page_home():
   <nav class="topnav" aria-label="{tr("nav.aria", "Navigation principale", "Main navigation")}" data-i18n-aria="nav.aria">
     <a href="#top" class="brand" aria-label="AI Diligence">{brand_lockup()}</a>
     <div class="nav-links">
-      {t("a", "nav.approach", "Approche", "Approach", ' href="#approach"')}
+      <a href="#services">Services</a>
+      {t("a", "nav.method", "Méthode", "Method", ' href="#method"')}
+      {t("a", "nav.refs", "Références", "References", ' href="#references"')}
       <a href="#due-diligence">Due diligence</a>
-      <a href="#expertise">Expertise</a>
       {t("a", "nav.about", "À propos", "About", ' href="#about"')}
       <a href="#contact">Contact</a>
       <a class="nav-hub" href="{HUB}" target="_blank" rel="noopener">paulasquin.com ↗</a>
