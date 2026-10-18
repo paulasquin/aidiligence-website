@@ -75,6 +75,18 @@ the browser theme) and `icon-256.png`. The lockup's text is outlined from Unboun
 SVGs need no font. Colours: `#6fd6ff` → `#8b7bff` gradient, ink `#eceaf6` on dark,
 `#14162b` on light.
 
+### LinkedIn banners
+
+```bash
+uv run -q --with playwright python tools/banners.py
+```
+
+renders `tools/banner.html` — the hero's particle wheel and the site's copy — into
+`brand/linkedin-banner-profile-{fr,en}.png` (personal profile, 1584 × 396) and
+`brand/linkedin-banner-company-{fr,en}.png` (company page, 1128 × 191), at twice those sizes
+for high-density screens. The bottom left is left empty: LinkedIn puts the profile photo and
+the page logo there.
+
 ### Intro
 
 The home page's nav logo is the whole wheel (`tools/brand-wheel.svg`, written by
