@@ -84,7 +84,7 @@ uv run -q --with fonttools --with brotli --with playwright python tools/logo.py
 
 writes `brand/` — mark and lockup as SVG and PNG, for dark (`-dark-bg`) and light
 (`-light-bg`) backgrounds, and `aidiligence-linkedin-logo.png` (1200×1200, the mark on the
-site's dark background) — plus the site icons `assets/img/mark.svg`, `favicon.svg` (follows
+site's dark background), `aidiligence-avatar-centred.png` and `mark-centred-*` (the hub at the centre, so a round crop on LinkedIn or Instagram is concentric with the wheel) — plus the site icons `assets/img/mark.svg`, `favicon.svg` (follows
 the browser theme) and `icon-256.png`. The lockup's text is outlined from Unbounded, so the
 SVGs need no font. Colours: `#6fd6ff` → `#8b7bff` gradient, ink `#eceaf6` on dark,
 `#14162b` on light.
