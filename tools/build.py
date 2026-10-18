@@ -81,6 +81,31 @@ LANG_SCRIPT = """<script>
     })();
   </script>"""
 
+# Brand intro, once per session: the wheel rolls in and reveals the name. Not
+# for a visitor coming back from the language switch, following an anchor, or
+# asking for reduced motion; the stylesheet hides it after 7 s whatever happens.
+INTRO_SCRIPT = """<script>
+    (function () {
+      try {
+        if (sessionStorage.getItem('intro') || sessionStorage.getItem('scrollY') || location.hash
+            || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        document.documentElement.classList.add('intro');
+      } catch (e) {}
+    })();
+  </script>"""
+
+
+def intro_overlay():
+    with open(os.path.join(ROOT, "tools/intro-wheel.svg"), encoding="utf-8") as f:
+        wheel = f.read().strip()  # written by tools/logo.py
+    return f"""<div class="intro-overlay" aria-hidden="true">
+    <div class="intro-lockup">
+      {wheel}
+      <div class="intro-text"><b>AI</b> <span>Diligence</span></div>
+    </div>
+  </div>"""
+
+
 FONTS = ('<link rel="preload" as="font" type="font/woff2" href="assets/fonts/unbounded-latin.woff2" crossorigin>\n'
          '  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-latin.woff2" crossorigin>')
 
@@ -382,6 +407,7 @@ def page_home():
   <meta property="og:image" content="{URL}assets/og.jpg">
   <meta name="twitter:card" content="summary_large_image">
   {LANG_SCRIPT}
+  {INTRO_SCRIPT}
   <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
   <link rel="apple-touch-icon" href="assets/img/icon-256.png">
   {FONTS}
@@ -395,6 +421,7 @@ def page_home():
   </script>
 </head>
 <body class="is-loading">
+  {intro_overlay()}
   <canvas id="field" class="field" aria-hidden="true"></canvas>
   <div class="veil" aria-hidden="true"></div>
   <div class="scroll-progress" aria-hidden="true"><span></span></div>

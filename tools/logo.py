@@ -14,6 +14,8 @@ Writes:
   for LinkedIn;
 - assets/img/mark.svg (the nav), assets/img/favicon.svg (follows the browser's light / dark theme) and
   assets/img/icon-256.png (the avatar, for touch icons) — the site icons.
+- tools/intro-wheel.svg — the whole wheel, inlined by tools/build.py for the
+  intro animation.
 
 Usage: uv run -q --with fonttools --with brotli --with playwright python tools/logo.py
 (Playwright renders with the installed Chrome: channel="chrome".)
@@ -97,6 +99,48 @@ def favicon_svg():
              f"@media (prefers-color-scheme: dark){{path.ink{{fill:{INK_DARK_BG}}}"
              f"line.ink{{stroke:{INK_DARK_BG}}}}}</style>")
     return svg(128, 128, style + mark_paths(None))
+
+
+def wheel_svg(ink):
+    """The whole wheel, hub at (0, 0), for the intro animation (assets/js/main.js).
+
+    .iw-roll turns while the svg moves; its .iw-back half fades out once the
+    wheel stops and .iw-axle grows from the hub: what is left is the mark.
+    """
+    r = RIM_R
+    rf = r - TIRE / 2 - RIM_GAP - FELLOE / 2
+    r1 = rf - FELLOE / 2 + 0.5
+    pol = lambda rr, a: (rr * math.cos(math.radians(a)), rr * math.sin(math.radians(a)))
+    bolts = "".join('<circle cx="%.2f" cy="%.2f" r="%g" fill="black"/>' % (*pol(rf, a), BOLT_R)
+                    for a in range(0, 360, 30))
+
+    def spoke(a):
+        c, s_ = math.cos(math.radians(a)), math.sin(math.radians(a))
+        pts = [(c * rr + s_ * w / 2 * k, s_ * rr - c * w / 2 * k)
+               for rr, w, k in ((HUB_HOLE, SPOKE_HUB, 1), (r1, SPOKE_RIM, 1), (r1, SPOKE_RIM, -1), (HUB_HOLE, SPOKE_HUB, -1))]
+        return '<path d="M' + " L".join(f"{px:.2f} {py:.2f}" for px, py in pts) + '" fill="url(#iwg)"/>'
+
+    def half(sign):  # sign 1: the right half (it stays), -1: the left one
+        arc = lambda rr: f"M0 {-sign * rr:g} A{rr:g} {rr:g} 0 0 1 0 {sign * rr:g}"
+        spokes = "".join(spoke(a if sign > 0 else a + 180) for a in (-60, -30, 0, 30, 60))
+        if sign < 0:
+            spokes += spoke(90) + spoke(-90)  # the axle takes their place
+        return (f'<path d="{arc(r)}" fill="none" stroke="url(#iwg)" stroke-width="{TIRE}" stroke-linecap="round"/>'
+                f'<path d="{arc(rf)}" fill="none" stroke="url(#iwg)" stroke-width="{FELLOE}" mask="url(#iwb)"/>'
+                + spokes)
+
+    end = HUB_HOLE + AXLE / 2 + 0.5
+    ring = lambda rr: f"M{-rr} 0 a{rr} {rr} 0 1 0 {2 * rr} 0 a{rr} {rr} 0 1 0 {-2 * rr} 0Z"
+    o = r + TIRE / 2 + 1
+    return (f'<svg class="intro-wheel" viewBox="{-o:g} {-o:g} {2 * o:g} {2 * o:g}" aria-hidden="true">'
+            f"<defs>{gradient('iwg', -16, -r - 2, 50, r + 2)}"
+            f'<mask id="iwb" maskUnits="userSpaceOnUse" x="{-o:g}" y="{-o:g}" width="{2 * o:g}" height="{2 * o:g}">'
+            f'<rect x="{-o:g}" y="{-o:g}" width="{2 * o:g}" height="{2 * o:g}" fill="white"/>{bolts}</mask></defs>'
+            f'<g class="iw-roll"><g class="iw-back">{half(-1)}</g><g class="iw-front">{half(1)}</g></g>'
+            f'<g class="iw-axle"><line x1="0" y1="{-r}" x2="0" y2="{-end:g}" stroke="{ink}" stroke-width="{AXLE}" stroke-linecap="round"/>'
+            f'<line x1="0" y1="{end:g}" x2="0" y2="{r}" stroke="{ink}" stroke-width="{AXLE}" stroke-linecap="round"/></g>'
+            f'<path d="{ring(HUB_R)}{ring(HUB_HOLE)}" fill-rule="evenodd" fill="{ink}"/>'
+            f'<path d="{ring(CAP_R)}" fill="{ink}"/></svg>\n')
 
 
 # --------------------------------------------------------------------------- #
@@ -188,6 +232,7 @@ def main():
     write("brand/lockup-light-bg.svg", lockup_svg(INK_LIGHT_BG))
     write("assets/img/favicon.svg", favicon_svg())
     write("assets/img/mark.svg", mark_svg(INK_DARK_BG))
+    write("tools/intro-wheel.svg", wheel_svg(INK_DARK_BG))
     write("brand/avatar.html", avatar_html(400))
     render_pngs()
     os.remove(os.path.join(BRAND, "avatar.html"))

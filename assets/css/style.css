@@ -230,6 +230,35 @@ main, .topnav { position: relative; z-index: 2; }
 .footer a { text-decoration: none; color: var(--muted); }
 .footer a:hover { color: var(--fg); }
 
+/* ---------------- intro: the wheel rolls in and reveals the name ---------------- */
+.intro-overlay { display: none; }
+html.intro .intro-overlay {
+  position: fixed; inset: 0; z-index: 60; display: grid; place-items: center;
+  background: radial-gradient(120% 90% at 70% 10%, #11143a 0%, var(--bg2) 38%, var(--bg) 75%);
+  animation: intro-safety .01s 7s forwards; /* never stays if the script fails */
+}
+@keyframes intro-safety { to { opacity: 0; visibility: hidden; } }
+/* Proportions of tools/logo.py, in 128ths of the mark's box (--u). */
+.intro-lockup {
+  --s: clamp(84px, 13vw, 150px); --u: calc(var(--s) / 128);
+  position: relative; display: flex; align-items: center; height: var(--s);
+  padding-left: calc(87.25 * var(--u));
+}
+.intro-wheel {
+  position: absolute; width: calc(98.5 * var(--u)); height: calc(98.5 * var(--u));
+  left: calc(-32.25 * var(--u)); top: calc(14.75 * var(--u)); overflow: visible;
+}
+.intro-text {
+  font: 400 calc(58 * var(--u))/1 var(--display); letter-spacing: -.02em; white-space: nowrap;
+  clip-path: inset(-20% 0 -20% 100%);
+}
+.intro-text b {
+  font-weight: 700;
+  background: linear-gradient(100deg, #6fd6ff, #8b7bff);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+html.intro .intro-wheel { visibility: hidden; }
+
 /* ---------------- sub-pages: 404, legal notice ---------------- */
 .subpage .topnav { opacity: 1; }
 .legal .wrap { display: flex; justify-content: center; }

@@ -44,7 +44,7 @@ Then <http://127.0.0.1:8767/> — `?lang=en` / `?lang=fr` force a language, `?de
 ## Structure
 
 - `assets/css/style.css` — styles (shared conventions with paulasquin.com).
-- `assets/js/main.js` — smooth scroll, reveals, nav, pointer effects, boot.
+- `assets/js/main.js` — brand intro, smooth scroll, reveals, nav, pointer effects, boot.
 - `assets/js/i18n.js` — language handling (from `paulasquin/showcase-kit`). The inline script
   in `<head>` picks the language before first paint: `?lang=`, then the visitor's saved
   choice, then the browser languages; English is applied from `strings.js` at boot.
@@ -74,6 +74,17 @@ site's dark background) — plus the site icons `assets/img/mark.svg`, `favicon.
 the browser theme) and `icon-256.png`. The lockup's text is outlined from Unbounded, so the
 SVGs need no font. Colours: `#6fd6ff` → `#8b7bff` gradient, ink `#eceaf6` on dark,
 `#14162b` on light.
+
+### Intro
+
+On a visitor's first page of the session, the whole wheel rolls in from the right edge of the
+screen without slipping (whole turns, so it stops as drawn), the name appears behind it, then
+its back half fades and the axle grows from the hub: the logo, which then gives way to the
+hero. A click, a key or a scroll speeds it up; it is skipped after the language switch, on a
+link to an anchor and with `prefers-reduced-motion`, and the stylesheet hides it after 7 s if
+the script fails. The wheel (`tools/intro-wheel.svg`) is written by `tools/logo.py` and
+inlined by `tools/build.py`; the timeline is `brandIntro()` in `assets/js/main.js`. To see it
+again: `sessionStorage.removeItem('intro')`, then reload.
 
 ## Deployment
 
