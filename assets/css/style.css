@@ -258,6 +258,8 @@ html.intro .intro-overlay {
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
 html.intro .intro-wheel { visibility: hidden; }
+/* Nothing to paint under the overlay while the wheel rolls. */
+html.intro main, html.intro .topnav, html.intro .scroll-progress { visibility: hidden; }
 
 /* ---------------- sub-pages: 404, legal notice ---------------- */
 .subpage .topnav { opacity: 1; }

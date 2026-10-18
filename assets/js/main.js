@@ -40,6 +40,7 @@ async function setupField() {
   const small = innerWidth < 860 || (navigator.hardwareConcurrency || 8) <= 4;
   const field = new Field($('#field'), { count: small ? 9000 : 22000, reduced });
   if (location.search.includes('debug')) window.__field = field;
+  if (!reduced) gsap.fromTo('#field', { opacity: 0 }, { opacity: 1, duration: 1.4, ease: 'power2.out' });
   let vel = 0;
   lenis?.on('scroll', (l) => { vel = l.velocity; });
   gsap.ticker.add((time) => { if (!document.hidden) field.update(time, vel); });
@@ -168,8 +169,9 @@ function pointerFx() {
 chrome();
 pointerFx();
 reveals();
-setupField();
-brandIntro().finally(heroIntro);
+// The field is built after the intro: its set-up blocks the main thread for a
+// moment, which would make the rolling wheel jump.
+brandIntro().finally(() => { heroIntro(); setupField(); });
 
 let y = null;
 try { y = sessionStorage.getItem('scrollY'); sessionStorage.removeItem('scrollY'); } catch (e) { /* private mode */ }
