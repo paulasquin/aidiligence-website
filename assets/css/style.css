@@ -192,6 +192,57 @@ main, .topnav { position: relative; z-index: 2; }
 .tile h3 { margin: 0; font: 500 18px/1.25 var(--display); letter-spacing: -.01em; }
 .tile p { margin: 0; color: var(--muted); font-size: 14.5px; }
 
+/* ---------------- services ---------------- */
+.tiles.offers { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.offer { gap: 12px; }
+.offer .pillar-icon { margin-bottom: 4px; }
+.offer-num { position: absolute; top: 26px; right: 24px; font: 500 12px/1 var(--mono); color: var(--accent); }
+.offer h3 { font-size: 20px; }
+.offer-list { list-style: none; padding: 0; margin: 4px 0 0; display: grid; gap: 7px; }
+.offer-list li { position: relative; padding-left: 18px; font-size: 14px; line-height: 1.45; color: var(--fg); }
+.offer-list li::before { content: ''; position: absolute; left: 0; top: .55em; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+.tile p.offer-proof { margin-top: auto; padding-top: 14px; border-top: 1px solid var(--line); font-size: 13px; color: var(--dim); }
+.offer-link { font: 500 12px/1 var(--mono); color: var(--accent2); text-decoration: none; letter-spacing: .04em; }
+.offer-link:hover .arrow { transform: translateX(3px); }
+.offer-link .arrow { display: inline-block; }
+
+/* ---------------- method ---------------- */
+.steps { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 28px; }
+.step { display: grid; grid-template-columns: 34px 1fr; column-gap: 6px; padding: 16px 0 14px; border-top: 1px solid var(--line); align-content: start; }
+.step-num { grid-row: span 2; font: 500 12px/1.9 var(--mono); color: var(--accent2); }
+.step h3 { margin: 0 0 5px; font: 500 17px/1.35 var(--display); letter-spacing: -.01em; }
+.step p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.55; }
+
+/* ---------------- references ---------------- */
+.tiles.missions { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 1080px; margin-left: auto; margin-right: auto; }
+.mission { gap: 12px; padding: 28px 30px 30px; }
+.mission-tag { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 0; font: 500 11px/1.4 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--dim); }
+.mission-tag b { color: var(--accent2); font-weight: 500; }
+.mission h3 { font: 300 24px/1.2 var(--display); }
+.mission h3 em { font-style: normal; font-weight: 700; background: linear-gradient(100deg, #6fd6ff, #8b7bff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.mission-name { font-weight: 500; }
+.mission .chips { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 4px 0 4px; }
+.mission .chips li { font-size: 12.5px; padding: 6px 12px; border-radius: 999px; border: 1px solid rgba(139, 123, 255, .4); background: rgba(139, 123, 255, .08); }
+.xp { max-width: 1080px; margin: 56px auto 0; }
+.xp .kicker { justify-content: center; }
+.xp-list { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 28px; }
+.xp-list a { display: grid; grid-template-columns: 110px 1fr auto; column-gap: 14px; align-items: baseline; padding: 14px 4px; border-top: 1px solid var(--line); text-decoration: none; transition: background .3s; }
+.xp-list a:hover { background: rgba(255, 255, 255, .03); }
+.xp-name { font: 500 16px/1.3 var(--display); }
+.xp-role { font-size: 13.5px; color: var(--fg); }
+.xp-what { grid-column: 2; font-size: 13px; color: var(--dim); }
+.xp-year { grid-column: 3; grid-row: 1; font: 500 12px/1.3 var(--mono); color: var(--muted); }
+
+/* ---------------- products ---------------- */
+.tiles.products { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 900px; margin-left: auto; margin-right: auto; }
+.product { flex-direction: row; gap: 20px; text-decoration: none; align-items: flex-start; }
+.product img { width: 64px; height: 64px; border-radius: 16px; flex: none; box-shadow: 0 10px 30px -8px rgba(0, 0, 0, .7); }
+.product-body { display: flex; flex-direction: column; gap: 6px; }
+.product-tag { font: 500 10.5px/1.4 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+.product-name { font: 500 22px/1.1 var(--display); }
+.product-text { color: var(--muted); font-size: 14.5px; }
+.product-link { font: 500 12px/1 var(--mono); color: var(--accent2); margin-top: 6px; }
+
 /* ---------------- focus areas ---------------- */
 .focus { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 28px; }
 .focus-item { display: grid; grid-template-columns: 34px 1fr; column-gap: 6px; padding: 16px 0 14px; border-top: 1px solid var(--line); align-content: start; }
@@ -270,7 +321,7 @@ html.intro .brand-text { clip-path: inset(-20% -5% -20% 100%); }
 
 /* ---------------- responsive ---------------- */
 @media (max-width: 1180px) {
-  .tiles { grid-template-columns: repeat(2, 1fr); max-width: 760px; margin-left: auto; margin-right: auto; }
+  .tiles, .tiles.offers { grid-template-columns: repeat(2, 1fr); max-width: 760px; margin-left: auto; margin-right: auto; }
   .nav-links { gap: 20px; }
 }
 @media (max-width: 980px) {
@@ -296,8 +347,11 @@ html.intro .brand-text { clip-path: inset(-20% -5% -20% 100%); }
   .legal { justify-content: flex-start; padding: 96px 0 48px; }
 }
 @media (max-width: 640px) {
-  .tiles { grid-template-columns: 1fr; }
-  .focus, .caps { grid-template-columns: 1fr; }
+  .tiles, .tiles.offers, .tiles.missions, .tiles.products { grid-template-columns: 1fr; }
+  .focus, .caps, .steps, .xp-list { grid-template-columns: 1fr; }
+  .xp-list a { grid-template-columns: 1fr auto; }
+  .xp-role, .xp-what { grid-column: 1; }
+  .xp-year { grid-column: 2; }
 }
 @media (max-width: 420px) {
   .btn { padding: 14px 18px; }

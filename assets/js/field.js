@@ -2,7 +2,8 @@
 // Every section names a shape (data-shape); the particles fly from the current
 // shape to the next one. Each particle carries a "kind" (integer part of w) and
 // a parameter (fraction of w) that the vertex shader animates: network forward
-// pass, orbits, a scan sweeping up the stack, a pulse running out from the hub.
+// pass, orbits, a scan sweeping up the stack, a pulse running out from the hub
+// or along the road.
 import * as THREE from 'three';
 
 const K = { STILL: 0, EDGE: 1, NODE: 2, ORBIT: 3, SWEEP: 4, RADIAL: 5 };
@@ -184,7 +185,47 @@ function stack(n) {
   return s;
 }
 
-const BUILDERS = { orb, galaxy, net, mark, stack };
+// The road of the method: two wheel tracks winding into the distance, four
+// staging posts on the way; a pulse runs along it (the parameter is the
+// distance travelled).
+function path(n) {
+  const s = new Shape(n), r = rng(9);
+  const cyan = C('#6fd6ff'), violet = C('#8b7bff'), ink = C('#efeaff');
+  const at = (t) => {
+    const z = 2.6 - 5.6 * t, x = 0.9 * Math.sin(t * 5 + 0.6) * (1 - 0.35 * t);
+    const dx = 0.9 * (5 * Math.cos(t * 5 + 0.6) * (1 - 0.35 * t) - 0.35 * Math.sin(t * 5 + 0.6)), dz = -5.6;
+    const l = Math.hypot(dx, dz);
+    return { x, z, nx: -dz / l, nz: dx / l };
+  };
+  const jit = (a) => (r() - 0.5) * a;
+  const posts = [0.12, 0.38, 0.64, 0.9];
+  const nTrack = Math.floor(n * 0.42), nRoad = Math.floor(n * 0.16), nPost = Math.floor(n * 0.16);
+  for (let i = 0; i < nTrack; i++) {
+    const t = r(), p = at(t), side = r() < 0.5 ? -1 : 1, w = 0.22 + jit(0.03);
+    s.push(p.x + p.nx * w * side, jit(0.015), p.z + p.nz * w * side, K.RADIAL, t, lerpC(cyan, violet, t).multiplyScalar(0.5 + r() * 0.5));
+  }
+  for (let i = 0; i < nRoad; i++) {
+    const t = r(), p = at(t), o = jit(0.4);
+    s.push(p.x + p.nx * o, jit(0.01), p.z + p.nz * o, K.RADIAL, t, lerpC(cyan, violet, t).multiplyScalar(0.12 + r() * 0.18));
+  }
+  for (let i = 0; i < nPost; i++) {
+    const t = posts[i % posts.length], p = at(t), side = (i % 8) < 4 ? 1 : -1;
+    const bx = p.x + p.nx * 0.42 * side, bz = p.z + p.nz * 0.42 * side;
+    if (r() < 0.45) { // the post
+      s.push(bx + jit(0.025), r() * 0.42, bz + jit(0.025), K.RADIAL, t, ink.clone().multiplyScalar(0.45 + r() * 0.35));
+    } else { // its lamp
+      const u = r() * 2 - 1, a = r() * Math.PI * 2, rr = 0.09 * Math.cbrt(r()), q = Math.sqrt(1 - u * u);
+      s.push(bx + q * Math.cos(a) * rr, 0.48 + u * rr, bz + q * Math.sin(a) * rr, K.RADIAL, t, ink.clone().multiplyScalar(0.8 + r() * 0.2));
+    }
+  }
+  while (!s.full) {
+    const u = r() * 2 - 1, a = r() * Math.PI * 2, rr = 2 + Math.pow(r(), 1.4) * 1.4, q = Math.sqrt(1 - u * u);
+    s.push(Math.cos(a) * q * rr, u * rr * 0.7, Math.sin(a) * q * rr, K.ORBIT, r(), lerpC(violet, cyan, r()).multiplyScalar(0.1 + r() * 0.3));
+  }
+  return s;
+}
+
+const BUILDERS = { orb, galaxy, net, mark, stack, path };
 
 // How each shape is presented: tilt, and an optional slow sway.
 const VIEW = {
@@ -193,6 +234,7 @@ const VIEW = {
   net: { rx: 0.05, ry: -0.42, rz: 0, scale: 0.8, sway: 0.18 },
   mark: { rx: 0.04, ry: -0.2, rz: 0, scale: 1.05, sway: 0.28 },
   stack: { rx: 0.5, ry: 0.62, rz: 0, scale: 0.74, sway: 0.3 },
+  path: { rx: 0.42, ry: -0.35, rz: 0, scale: 0.8, sway: 0.18 },
 };
 
 /* ---------------- shaders ---------------- */

@@ -1,9 +1,22 @@
 # aidiligence.eu
 
-Static site for AI Diligence, in the visual language of [paulasquin.com](https://paulasquin.com):
-dark stage, a three.js particle field that changes shape from section to section, GSAP
-(ScrollTrigger) reveals and Lenis smooth scrolling. French and English, language picked
-automatically. The `revela.` and `siflo.` subdomains are separate sites, not served from here.
+Site of AI Diligence, the AI services of Guardia SAS: AI project leadership (the *conduite* of
+the name — a diligence is also a stagecoach), AI and MLOps engineering, and AI due diligence.
+Sections: services, method, references (missions, then the founder's experience), the eight
+due-diligence focus areas, expertise, products (Revela, Siflo), founder, contact.
+
+Same visual language as [paulasquin.com](https://paulasquin.com): dark stage, a three.js
+particle field that changes shape from section to section, GSAP (ScrollTrigger) reveals and
+Lenis smooth scrolling. French and English, language picked automatically. The `revela.` and
+`siflo.` subdomains are separate sites, not served from here.
+
+**aidiligence.eu and paulasquin.com.** This site is the company; paulasquin.com
+([paulasquin/paulasquin-site](https://github.com/paulasquin/paulasquin-site)) is the person:
+career, projects, talks. Each fact lives on one site and the other links to it: the career is
+only summed up here (references link to paulasquin.com's anchors), the services only summed up
+there. The four founder facts are the one deliberate duplicate — keep them in step with
+paulasquin.com's About card. Nothing is shared at runtime, since this site loads nothing from
+other domains (below).
 
 No external request at runtime — the legal notice says so, keep it true. Everything is served
 from this repository:
@@ -22,7 +35,7 @@ To upgrade a library, download the new pinned build into `assets/vendor/` under 
 python3 tools/build.py
 ```
 
-The Python 3 standard library is enough. All page content lives in `tools/build.py`, as
+The Python 3.12+ standard library is enough. All page content lives in `tools/build.py`, as
 (French, English) pairs. The build writes:
 
 - `index.html` — French text, each translatable element tagged `data-i18n="key"`;
@@ -52,7 +65,8 @@ Then <http://127.0.0.1:8767/> — `?lang=en` / `?lang=fr` force a language, `?de
   a shape (`data-shape`) and the side of the screen it sits on (`data-side`: -1, 0, 1).
   Shapes: `mark` (the AI Diligence logo, drawn with the proportions of `tools/logo.py`,
   a pulse running from the hub out along the spokes), `galaxy`, `stack` (four layers of an AI stack scanned
-  from bottom to top), `net` (neural network with a forward pass), `orb`. Every shape must
+  from bottom to top), `path` (the method's road: two wheel tracks and four staging posts, a
+  pulse running along it), `net` (neural network with a forward pass), `orb`. Every shape must
   fill exactly `n` particles.
 - `assets/og.jpg` — capture of the hero at 1200×630, used for link previews.
 
