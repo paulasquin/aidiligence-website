@@ -10,8 +10,10 @@ of the constants below.
 Writes:
 - brand/*.svg — mark and lockup, for dark and for light backgrounds; the
   lockup's text is outlined from assets/fonts/unbounded-latin.woff2;
-- brand/*.png — the same, rendered by headless Chrome, plus a square avatar
-  for LinkedIn;
+- brand/*.png — the same, rendered by headless Chrome, plus square avatars:
+  aidiligence-linkedin-logo.png (the mark centred as a shape) and
+  aidiligence-avatar-centred.png (the hub at the centre, for round crops);
+- brand/mark-centred-*.svg — the mark in a square centred on the hub;
 - assets/img/mark.svg (the nav), assets/img/favicon.svg (follows the browser's light / dark theme) and
   assets/img/icon-256.png (the avatar, for touch icons) — the site icons.
 - tools/brand-wheel.svg — the whole wheel, inlined by tools/build.py as the
@@ -91,6 +93,18 @@ def svg(w, h, body, title="AI Diligence"):
 
 def mark_svg(ink):
     return svg(128, 128, mark_paths(ink))
+
+
+# Centred on the hub, for round crops (LinkedIn, Instagram): the rim is then
+# concentric with the circle the network draws around the picture.
+CENTRED_HALF = RIM_R + TIRE / 2 + 6
+
+
+def mark_centred_svg(ink):
+    h = CENTRED_HALF
+    return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="{AXLE_X - h:g} {HUB_Y - h:g} {2 * h:g} {2 * h:g}" '
+            f'width="128" height="128" role="img" aria-label="AI Diligence"><title>AI Diligence</title>'
+            f'{mark_paths(ink)}</svg>\n')
 
 
 def favicon_svg():
@@ -191,6 +205,16 @@ background:radial-gradient(70% 70% at 50% 42%, #161c4c 0%, #0a0d1f 55%, {BG} 100
 </div></body></html>"""
 
 
+def avatar_centred_html(size, rim=0.31):
+    """Square avatar with the hub at its centre, the rim at `rim` × size from it."""
+    img = size * rim * 2 * CENTRED_HALF / (RIM_R + TIRE / 2)
+    return f"""<html><body style="margin:0">
+<div style="width:{size}px;height:{size}px;display:grid;place-items:center;
+background:radial-gradient(60% 60% at 50% 50%, #161c4c 0%, #0a0d1f 60%, {BG} 100%)">
+<img src="mark-centred-dark-bg.svg" style="width:{img:.1f}px;height:{img:.1f}px">
+</div></body></html>"""
+
+
 def write(rel, content):
     dest = os.path.join(ROOT, rel)
     os.makedirs(os.path.dirname(dest), exist_ok=True)
@@ -208,6 +232,9 @@ def render_pngs():
         ("lockup-dark-bg.svg", "brand/aidiligence-lockup-dark-bg.png", None, 128, 6, None),
         ("lockup-light-bg.svg", "brand/aidiligence-lockup-light-bg.png", None, 128, 6, None),
         ("avatar.html", "brand/aidiligence-linkedin-logo.png", 400, 400, 3, BG),
+        ("mark-centred-dark-bg.svg", "brand/aidiligence-mark-centred-dark-bg.png", 128, 128, 8, None),
+        ("mark-centred-light-bg.svg", "brand/aidiligence-mark-centred-light-bg.png", 128, 128, 8, None),
+        ("avatar-centred.html", "brand/aidiligence-avatar-centred.png", 400, 400, 3, BG),
         ("avatar.html", "assets/img/icon-256.png", 400, 400, 0.64, BG),
     ]
     with sync_playwright() as p:
@@ -234,9 +261,13 @@ def main():
     write("assets/img/favicon.svg", favicon_svg())
     write("assets/img/mark.svg", mark_svg(INK_DARK_BG))
     write("tools/brand-wheel.svg", wheel_svg(INK_DARK_BG))
+    write("brand/mark-centred-dark-bg.svg", mark_centred_svg(INK_DARK_BG))
+    write("brand/mark-centred-light-bg.svg", mark_centred_svg(INK_LIGHT_BG))
     write("brand/avatar.html", avatar_html(400))
+    write("brand/avatar-centred.html", avatar_centred_html(400))
     render_pngs()
-    os.remove(os.path.join(BRAND, "avatar.html"))
+    for f in ("avatar.html", "avatar-centred.html"):
+        os.remove(os.path.join(BRAND, f))
 
 
 if __name__ == "__main__":
