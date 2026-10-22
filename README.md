@@ -5,7 +5,7 @@ the name — a diligence is also a stagecoach), AI and MLOps engineering, and AI
 Sections: services, method, references (missions, then the founder's experience), the eight
 due-diligence focus areas, expertise, products (Revela, Siflo), founder, contact.
 
-Same visual language as [paulasquin.com](https://paulasquin.com): dark stage, a three.js
+Same visual language as [me.paulasquin.com](https://me.paulasquin.com): dark stage, a three.js
 particle field that changes shape from section to section, GSAP (ScrollTrigger) reveals and
 Lenis smooth scrolling. French and English, language picked automatically. The `revela.` and
 `siflo.` subdomains are separate sites, not served from here.

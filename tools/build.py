@@ -25,7 +25,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SITE = "AI Diligence"
 URL = "https://aidiligence.eu/"
-HUB = "https://paulasquin.com"
+HUB = "https://me.paulasquin.com"
 LINKEDIN = "https://www.linkedin.com/in/paulasquin"
 EMAIL = "contact@aidiligence.eu"
 
@@ -243,7 +243,7 @@ PRODUCTS = [
       "proche, préréglages .xmp. Tout est traité sur le téléphone.",
       "Edit photos on Android with Lightroom's adjustments: the same sliders, a close rendering, "
       ".xmp presets. Everything is processed on the phone.")),
-    ("Siflo", "https://siflo.aidiligence.eu", "siflo.png",
+    ("Siflo", "https://siflo.app", "siflo.png",
      ("Transmettre les signaux de sifflet et les messages d'un groupe, de téléphone à téléphone, "
       "même sans réseau, en canyon, en escalade ou en spéléo.",
       "Pass whistle signals and messages within a group, from phone to phone, even without a "
@@ -362,7 +362,7 @@ def body_home():
             <h3><span class="mission-name">{name},</span> {t("span", f"ms{i}.t", *title)}</h3>
             {t("p", f"ms{i}.p", *text)}
             <ul class="chips">{"".join(t("li", f"ms{i}.c{j}", *c) for j, c in enumerate(chips, 1))}</ul>
-            <a class="offer-link" href="{HUB}/#{anchor}" target="_blank" rel="noopener">paulasquin.com <span class="arrow">↗</span></a>
+            <a class="offer-link" href="{HUB}/#{anchor}" target="_blank" rel="noopener">me.paulasquin.com <span class="arrow">↗</span></a>
           </article>""" for i, (name, role, ctx, title, text, chips, anchor) in enumerate(MISSIONS, 1))
     experience = "\n".join(
         f'            <li><a href="{HUB}/#{anchor}" target="_blank" rel="noopener">'
@@ -521,7 +521,7 @@ def body_home():
             <ul class="facts">
 {facts}
             </ul>
-            <p class="card-cta"><a class="btn btn-ghost magnetic" href="{HUB}" target="_blank" rel="noopener">{t("span", "ab.hub", "Tout le parcours sur paulasquin.com", "The full story on paulasquin.com")}<span class="arrow">↗</span></a></p>
+            <p class="card-cta"><a class="btn btn-ghost magnetic" href="{HUB}" target="_blank" rel="noopener">{t("span", "ab.hub", "Tout le parcours sur me.paulasquin.com", "The full story on me.paulasquin.com")}<span class="arrow">↗</span></a></p>
           </div>
         </div>
       </div>
@@ -542,7 +542,7 @@ def body_home():
       </div>
       <footer class="footer">
         <span>© {SITE} · Guardia SAS — {t("span", "ft.tag", "Conduite et audit de projets d'IA", "AI project leadership and due diligence")}</span>
-        <span><a href="{HUB}" target="_blank" rel="noopener">paulasquin.com</a> · <a href="{LINKEDIN}" target="_blank" rel="noopener noreferrer">LinkedIn</a> · <a href="mailto:{EMAIL}">{EMAIL}</a> · {t("a", "ft.legal", "Mentions légales", "Legal notice", ' href="legal/"')}</span>
+        <span><a href="{HUB}" target="_blank" rel="noopener">me.paulasquin.com</a> · <a href="{LINKEDIN}" target="_blank" rel="noopener noreferrer">LinkedIn</a> · <a href="mailto:{EMAIL}">{EMAIL}</a> · {t("a", "ft.legal", "Mentions légales", "Legal notice", ' href="legal/"')}</span>
       </footer>
     </section>"""
 
@@ -597,7 +597,7 @@ def page_home():
       <a href="#due-diligence">Due diligence</a>
       {t("a", "nav.about", "À propos", "About", ' href="#about"')}
       <a href="#contact">Contact</a>
-      <a class="nav-hub" href="{HUB}" target="_blank" rel="noopener">paulasquin.com ↗</a>
+      <a class="nav-hub" href="{HUB}" target="_blank" rel="noopener">me.paulasquin.com ↗</a>
     </div>
     <div class="lang-switch" role="group" aria-label="{tr("nav.lang", "Langue", "Language")}" data-i18n-aria="nav.lang">
       <button type="button" data-lang="fr">FR</button><button type="button" data-lang="en">EN</button>
