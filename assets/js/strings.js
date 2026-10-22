@@ -129,7 +129,7 @@ export const STATIC_EN = {
   "pr.k": "Products",
   "pr.t": "Apps <em>built in-house</em>",
   "ab.k": "About · Founder",
-  "ab.hub": "The full story on paulasquin.com",
+  "ab.hub": "The full story on me.paulasquin.com",
   "ct.k": "Contact",
   "ct.t": "An AI project <em>to lead or to assess?</em>",
   "ct.p": "Let's talk about your needs. Answers on LinkedIn or by email.",
